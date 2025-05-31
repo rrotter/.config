@@ -6,9 +6,9 @@ This opinionated repo expects nearly all config to live in `~/.config`. That's w
 scripts in this directory: I keep my `~/.local` entirely ephemeral. For programs that are
 absolutely resistant to using `XDG_CONFIG_HOME`, we set up a small number of symlinks.
 
-I keep a small number of files containing personal settings in a separate private repo which I
-checkout to `~/.private`. This is where I keep things that are environment specific like email
-addresses and server names. The rest of this repo is easily usable without these details.
+I keep a few files containing personal settings in a separate private repo which I checkout to
+to `~/.private`. This is where I keep things that are environment specific like email addresses
+and server names. The rest of this repo is easily usable without these details.
 
 ## Installation ##
 
@@ -25,12 +25,12 @@ git clone https://github.com/rrotter/.config
 ```
 
 #### clone `.private` ####
-Here's the files my `~/.private/` repo contains:
+List of files in my `~/.private/` repo:
 
 ```
 ~/.private/scripts/init.sh # setup script
-~/.private/aws/config # set my aws profiles and regions
-~/.private/git/config # sets user.name, user.email, user.signingkey, commit.gpgsign
+~/.private/aws/config # configure aws profiles and regions
+~/.private/git/config # user.name, user.email, user.signingkey, commit.gpgsign
 ~/.private/git/allowedSigners # list of ssh keys I trust to sign git commits
 ~/.private/git/mailmap # beautify my collegues email addresses in `git log`
 ~/.private/ssh_config.d/ # several additional ssh config files that get symlinked into ~/.ssh/config.d/ on a per-host basis
