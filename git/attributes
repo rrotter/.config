@@ -1,0 +1,2 @@
+*.go whitespace=indent-with-non-tab
+.gitmodules whitespace=indent-with-non-tab

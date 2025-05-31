@@ -1,0 +1,25 @@
+// For all options, see:
+// https://github.com/fastfetch-cli/fastfetch/blob/master/presets/all.jsonc
+{
+  "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
+  "display": {"color": "1", "brightColor": true},
+  "logo": {"padding": {"right": 3}},
+  "modules": [
+    "title",
+    "break",
+    {"type": "os", "format": "{2} {10} {8} {12} {11}"},
+    "host",
+    {"type": "kernel", "format": "{1} {2} {4}"},
+    {"type": "uptime", "format": "{1}d {2}h {3}m"},
+    "packages",
+    {"type": "shell", "format": "{7} {4}"},
+    {"type": "cpu", "showPeCoreCount": true},
+    {"type": "gpu", "format": "{2} ({5}) @ {12}"},
+    "memory",
+    {"type": "localip"},
+    "publicip",
+    "locale",
+    "break",
+    "colors",
+  ]
+}

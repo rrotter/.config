@@ -1,0 +1,4 @@
+# mangrep page [search string]
+#
+# search man page for lines starting with `search string`
+man $1 | col -b | egrep '^\s*(-[a-zA-Z], )?'${@[2,-1]}

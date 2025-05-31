@@ -1,0 +1,5 @@
+#compdef mkcd
+
+_arguments -s \
+  '(1)-t[create temp dir]' \
+  '(-t):directory:_directories'

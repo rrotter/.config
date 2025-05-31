@@ -1,0 +1,4 @@
+#!/usr/bin/env -S zsh --no-rcs
+
+gls=$(git ls-tree --abbrev HEAD "$@")
+paste <(print $gls | cut -f1) <(ls -dF --color=always $(print $gls | cut -f2))

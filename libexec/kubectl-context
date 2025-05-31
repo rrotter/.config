@@ -1,0 +1,8 @@
+#!/bin/sh
+
+if [ -n "$1" ]; then
+  kubectl config use-context $1
+else
+  kubectl config get-contexts | GREP_COLOR='01;34' egrep '(^\*.*)|$' --color=auto
+fi
+

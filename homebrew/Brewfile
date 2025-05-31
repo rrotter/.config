@@ -1,0 +1,129 @@
+def noln(formula)
+  brew formula, link: false
+end
+
+def link(formula)
+  brew formula, link: true
+end
+
+def cask_nobin(mycask)
+  cask mycask, args: { no_bin: true }
+end
+
+# prevent silent use of root access
+system "sudo -k"
+
+tap "homebrew/cask" if Tap.fetch("homebrew/cask").installed?
+tap "rattatap/tap"
+
+# cli tools
+noln "bind"; noln "jemalloc"; noln "libidn2"
+brew "dos2unix"
+brew "duti" # for setting mac file handlers
+brew "fastfetch"
+brew "fd"
+brew "fzf"
+brew "glow" # markdown
+brew "hyperfine"
+brew "jq"; noln "oniguruma"
+brew "less"
+brew "neovim"; brew "luv"; brew "tree-sitter"
+brew "ripgrep"
+brew "tlrc" # tldr
+brew "tmux"
+brew "tree"
+brew "unar"
+brew "watch"
+brew "zsh-completions"
+brew "zstd"
+
+# pgp
+brew "pgpdump"
+brew "sequoia-sq"
+brew "sequoia-chameleon-gnupg"
+
+# sysadmin
+brew "awscli"; brew "saml2aws"
+brew "cloudflare-cli4"
+brew "rattatap/tap/fwknop-client"
+brew "opentofu"
+brew "sslscan"
+brew "terraform"
+brew "trivy"
+
+# kubectl + plugins
+brew "kubernetes-cli"
+brew "kubectl-rook-ceph"
+brew "kubelogin"
+brew "kubecolor"
+
+# kubernetes
+brew "kubeseal"
+brew "helm"
+brew "k9s"
+brew "tanka"; brew "jsonnet"; brew "jsonnet-bundler"
+
+# homebrew development
+brew "actionlint"
+brew "bash-completion"
+noln "shellcheck"
+noln "shfmt"
+
+unless Hardware::CPU.virtualized?
+  # vm
+  brew "lima"
+  brew "kind"
+  brew "podman"
+  cask "utm"
+end
+
+# dev
+brew "gh"
+brew "glab"
+cask "hex-fiend"
+cask "iterm2"
+cask_nobin "ghostty"
+brew "python"
+link "ruby"
+
+unless Hardware::CPU.virtualized?
+  brew "mas"
+
+  # text editors
+  cask "textmate"
+
+  # desktop env
+  cask "1password"; cask "1password-cli"
+  cask "betterdisplay"
+  cask "discord"
+  cask "firefox"
+  cask "freecad"
+  cask "omnidisksweeper"
+  cask "pacifist"
+  cask "skim"
+  cask "slack"
+  cask "swiftbar" # scripts in menubar
+  cask_nobin "tower"
+  mas "Dato", id: 1470584107
+  mas "Deliveries", id: 290986013
+  mas "Numbers", id: 409203825
+  mas "Pages", id: 409201541
+  mas "Wipr", id: 1662217862
+
+  # misc tools
+  mas "Mactracker", id: 430255202
+  brew "ykman" # yubikey
+
+  # annoyances
+  cask "notunes"
+
+  # Install these casks manually. They require sudo, which we normally don't
+  # want to allow.
+  cask "kicad" if Cask::Caskroom.casks.find{|x| x.to_s == "kicad"}
+  cask "xquartz" if Cask::Caskroom.casks.find{|x| x.to_s == "xquartz"}
+end
+
+# common dependencies
+noln "gettext"
+noln "openssl@3"
+noln "pcre2"

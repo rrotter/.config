@@ -1,0 +1,25 @@
+# mkcd
+#
+# mkdir, then cd to it
+
+local f_tmp f_help
+
+zparseopts -E -F -- t=f_tmp h=f_help || return 1
+
+if [[ -n $f_help ]]; then
+  echo "usage:"
+  echo "  $0 dirname"
+  echo "  $0 -t"
+  return
+fi
+
+if (( $# != 1 )); then
+  echo "$0: requires exactly one arg" >&2
+  return 1
+fi
+
+if [[ $1 == "-t" ]]; then
+  $(mktemp -d)
+else
+  mkdir -p $1 && cd $1
+fi

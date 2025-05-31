@@ -1,0 +1,22 @@
+#compdef pwd
+
+_pick_variant -r variant -b zsh gnu=GNU $OSTYPE --version
+
+local args=('-P[Display physical current working directory (all symbolic links resolved)]')
+
+case $variant in
+zsh)
+  if [[ -o chaselinks ]]; then
+    args=('-L[Display logical current working directory]')
+  fi
+  ;;
+darwin*)
+  ;;
+*bsd*|dragonfly*|gnu)
+  args=('-L[Display logical current working directory]')
+  ;;
+*)
+  args=()
+esac
+
+_arguments $args

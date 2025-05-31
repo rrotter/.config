@@ -1,0 +1,83 @@
+[include]
+	path = ~/.private/git/config
+[alias]
+	br = branch
+	ci = commit
+	co = checkout
+	com = ! git checkout $(git rev-parse --abbrev-ref origin/HEAD | cut -c8-)
+	di = diff
+	dis = diff --staged
+	env = ! env
+	fixup = commit --amend
+	g = grep
+	l = ls
+	ll = ls -l
+	llr = ls -lr
+	lo = log --pretty=ol-terse -20 # a short log
+	logbranch = log origin/HEAD..
+	logsig = log --show-signature
+	lol = log --pretty=ol -20 # a (not as) short log
+	lr = ls -r
+	lrl = ls -lr
+	ls = ls-tree --abbrev HEAD
+	root = rev-parse --show-toplevel
+	sho = show --name-status
+	st = status
+	web = web
+	wt = worktree
+[color "branch"]
+	remote = magenta
+	worktree = green
+	current = bold blue
+[color "decorate"]
+	HEAD = black
+	branch = bold blue
+	remoteBranch = magenta
+[color "diff"]
+	commit = dim blue
+	oldMoved = 248
+	newMoved = 248
+	oldMovedAlternative = 248
+	newMovedAlternative = 248
+[color "grep"]
+	match = bold blue
+[color "status"]
+	header = dim
+	branch = bold blue
+	untracked = black
+[commit]
+	verbose = true
+[core]
+	whitespace = tab-in-indent
+[credential "https://github.com"]
+	helper = 
+	# use absolute path if git is called by homebrew
+	helper = !${HOMEBREW_PATH:+${HOMEBREW_PREFIX}/bin/}gh auth git-credential
+[credential "https://gist.github.com"]
+	helper = 
+	helper = !gh auth git-credential
+[diff]
+	colorMoved = zebra
+[fetch]
+	prune = true
+[gpg]
+	format = ssh
+	program = gpg-sq
+[gpg "ssh"]
+	allowedSignersFile = ~/.private/git/allowedSigners
+[grep]
+	patternType = extended
+[init]
+	defaultBranch = main
+[log]
+	mailmap = true
+	abbrevCommit = true
+[mailmap]
+	file = ~/.private/git/mailmap
+[pretty]
+	ol = %C(auto)%h %as %s <%aE>%d
+	ol-terse = %C(auto)%h %as %s <%aE>
+[push]
+	autoSetupRemote = true
+[worktree]
+	guessRemote = true

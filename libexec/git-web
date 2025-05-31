@@ -1,0 +1,41 @@
+#!/bin/sh
+#
+# git-web [file ...]
+#
+# Open web page of current git repo and branch. Optionally to
+# listed repo files or paths.
+
+# print url, open in browser if session is local
+open_url () {
+  echo "${1}"
+  if [ -z "${SSH_CLIENT}" ] && type open >/dev/null; then
+    open "${1}"
+  fi
+}
+
+# get repo info from git
+git_origin=$(git config branch.$(git rev-parse --abbrev-ref HEAD).remote)
+[ -n "$git_origin" ] || git_origin=origin
+url=$(git config remote.${git_origin}.url)
+url=${url%.git}
+branch=$(git branch --show-current)
+if [ -z "${url}" ]; then
+  echo "no remote configured" >&2
+  exit 1
+fi
+
+# don't try to open git://, ssh://, etc urls
+proto=${url%%://*}
+if [ ! "${proto}" = https ]; then
+  echo "remote url must be https, found: ${proto}" >&2
+  exit 1
+fi
+
+# open each file if given, else open git tree
+if [ -n "$*" ]; then
+  for x in "$@"; do
+    open_url "${url}/blob/${branch}/${x}"
+  done
+else
+  open_url "${url}/tree/${branch}"
+fi

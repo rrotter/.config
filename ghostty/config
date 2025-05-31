@@ -1,0 +1,69 @@
+## general settings ##
+# auto-update-channel = tip
+
+# We'd like to inherit working dir on new tabs but not new windows. This isn't
+# yet supported, so just disable altogether.
+# https://github.com/ghostty-org/ghostty/issues/1392
+window-inherit-working-directory = false
+
+# Place resize overlay. Would prefer:
+#   - Trigger on mousedown/mouseup rather than resize
+#   - Fade animation
+resize-overlay-position = top-right
+
+# Attempt green on black icon. Note, icon rendering is expected
+# to change in future releases.
+# https://github.com/ghostty-org/ghostty/issues/3076
+macos-icon = custom-style
+macos-icon-ghost-color = 008800
+macos-icon-screen-color = 000000
+
+# disable all shell integration, this belongs in .zshrc
+shell-integration = none
+cursor-style-blink = false
+
+# window size
+window-height = 40
+window-width = 110
+
+## font ##
+# slashed (not dotted) zero
+font-feature = zero
+# don't use confusing ligature for `!=`
+font-feature = ss19
+# turn off all programming ligatures
+# font-feature = -calt
+window-inherit-font-size = false
+font-size = 11
+theme = iTerm2 Light Background
+
+## keybindings ##
+# Don't break the option key.
+macos-option-as-alt = false
+
+# rm unwanted tab naviagation bindings
+keybind = cmd+physical:one=unbind
+keybind = cmd+physical:two=unbind
+keybind = cmd+physical:three=unbind
+keybind = cmd+physical:four=unbind
+keybind = cmd+physical:five=unbind
+keybind = cmd+physical:six=unbind
+keybind = cmd+physical:seven=unbind
+keybind = cmd+physical:eight=unbind
+keybind = cmd+physical:nine=unbind
+keybind = cmd+physical:zero=unbind
+keybind = ctrl+tab=unbind
+keybind = ctrl+shift+tab=unbind
+
+# natural text editing
+keybind = delete=text:\x04
+# prevent cmd+z from printing junk
+keybind = cmd+z=text:\x1c
+
+# reload / reset
+keybind = cmd+r=reload_config
+keybind = cmd+shift+r=reset
+
+# split
+keybind = cmd+d=new_split:down
+keybind = cmd+s=new_split:right

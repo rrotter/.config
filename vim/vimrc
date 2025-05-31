@@ -1,0 +1,21 @@
+if has('syntax')
+  syntax on
+endif
+
+set ruler
+
+" soft tabs, width 2
+set tabstop=2
+set softtabstop=2
+set shiftwidth=2
+set expandtab
+
+set hlsearch
+
+" disable mouse selection
+set mouse=
+
+set shortmess+=I
+
+set directory=$XDG_STATE_HOME/vim/swap | call mkdir(&directory, 'p', 0700)
+set viminfofile=$XDG_STATE_HOME/vim/viminfo

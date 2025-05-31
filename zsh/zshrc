@@ -1,0 +1,149 @@
+## history settings ##
+HISTFILE=$XDG_STATE_HOME/zhistory
+HISTSIZE=2000000
+SAVEHIST=2000000
+setopt EXTENDED_HISTORY
+setopt HIST_FIND_NO_DUPS HIST_IGNORE_DUPS HIST_IGNORE_SPACE HIST_REDUCE_BLANKS
+alias history='history -E'
+
+## keybindings ##
+bindkey -e # emacs bindings
+bindkey '^U' backward-kill-line
+zle -A emacs-forward-word forward-word
+
+backward-kill-word () {
+  local WORDCHARS="${WORDCHARS//[.\/=]/}"
+  zle .backward-kill-word
+}
+zle -N backward-kill-word
+bindkey '^W' .backward-kill-word
+
+zle-fg () {
+  if (( $#jobstates )); then
+    if (( $#BUFFER )); then
+      zle push-input -w
+    fi
+    BUFFER=' fg'
+    zle accept-line -w
+  fi
+}
+zle -N zle-fg
+bindkey '^Z' zle-fg
+
+## zsh shell options ##
+setopt AUTO_CD COMBINING_CHARS EXTENDED_GLOB INTERACTIVE_COMMENTS NO_CASE_GLOB
+cdpath=(~ ~/Documents ${HOMEBREW_PREFIX+$HOMEBREW_PREFIX/Library})
+disable log r - # useless zsh builtins
+TIMEFMT=$'\t%E real\t%U user\t%S sys\t(%P cpu)'
+REPORTTIME=10
+
+## OS specific ##
+case $OSTYPE in
+darwin*)
+  [[ -d /Applications/Tower.app ]] && alias tower=/Applications/Tower.app/Contents/MacOS/gittower
+  [[ -v commands[limactl] ]] && alias limactl='limactl --tty=false'
+;;
+esac
+
+if [[ ! -v SSH_CLIENT ]]; then
+  # Debian versions of these utils are too old to support hyperlinks,
+  # and they are unlikely to be useful on remote hosts anyway.
+  [[ -v commands[fd]   ]] && alias fd='fd --hyperlink'
+  [[ -v commands[rg]   ]] && alias rg="rg --hyperlink-format='file://{host}{path}'"
+  [[ -v commands[tree] ]] && alias tree='tree -F --hyperlink'
+fi
+
+## editor ##
+if [[ -v commands[nvim] ]]; then
+  export EDITOR=nvim
+  alias vi=nvim vim=nvim
+elif [[ -v commands[vim] ]]; then
+  export EDITOR=vim
+else
+  export EDITOR=vi
+fi
+
+## functions ##
+autoload -Uz run-help zmv
+unalias run-help
+alias help=run-help which-command='type -a' zmv='noglob zmv'
+
+## misc. aliases ##
+# shortening
+alias 64=base64 p='print -l' path='print -l $path' fpath='print -l $fpath' -='cd -'
+[[ -v commands[k9s] ]] && alias 9=k9s
+[[ -v commands[kubectl] ]] && k=kubectl
+[[ -v commands[tofu] ]] && alias tf=tofu
+alias g=git gg='git grep' remote='git remote --verbose'
+# alias git commands with barewords
+() {
+  local cmd; for cmd in \
+    add blame br branch cherry-pick co com ci commit di dis fetch fixup \
+    lo lol merge pull push rebase sho show st stash web wt worktree
+  alias $cmd="git ${cmd}"
+}
+
+# decoration
+[[ -v commands[kubecolor] ]] && alias k=kubecolor kubectl=kubecolor
+alias egrep='egrep --color=auto' fgrep='fgrep --color=auto' grep='grep --color=auto' rgrep='grep -r'
+alias ls='ls -F --color=auto' l='ls' la='ls -A' l1='\ls -1' ll='ls -lh' lla='ls -lAh'
+[[ -v commands[ip] ]] && alias ip='ip -color=auto'
+# fake tac
+[[ -v commands[tac] ]] || alias tac='tail -r'
+
+# If for some reason (e.g. `sudo -s`) we're root (or another daemon user),
+# skip any further initialization. Move config out of this block judiciously.
+if (( $UID > 500 )); then
+  # alias qua settings
+  alias diff='diff --color=auto -u'
+  alias ssh-add='ssh-add -t12h'
+
+  # zsh global aliases
+  alias -g C='| wc -l'
+  alias -g G='|& grep -i' V='|& grep -vi'
+  alias -g L='|& less'
+  alias -g S='| sort' U='| uniq'
+  # allow `fd` to use `rg` style hidden flag
+  [[ -v commands[fd] ]] && alias -g -- -.=--hidden
+
+  # fpath
+  fpath=(
+    ~/.config/zsh/functions
+    $fpath
+    ${GHOSTTY_RESOURCES_DIR+$GHOSTTY_RESOURCES_DIR/../zsh/site-functions}
+    $HOMEBREW_PREFIX/share/zsh/site-functions(N)
+    $HOMEBREW_PREFIX/share/zsh-completions(N)
+  )
+
+  # local functions
+  autoload -Uz ~/.config/zsh/functions/^_*(:t)
+  alias mcd=mkcd
+
+  ## local path ##
+  typeset -U path
+  path=(~/.config/libexec ~/.local/bin(N) $path)
+
+  ## source additional init scripts ##
+  source ~/.config/zsh/prompt.zsh
+
+  # source remaining files when zle is idle
+  typeset -ga _zsh_asyncsource_files=( ~/.config/zsh/completion.zsh )
+  _zsh-asyncsource-schedule () {
+    local fd
+    exec {fd}</dev/null
+    zle -F $fd _zsh-asyncsource
+  }
+  _zsh-asyncsource () {
+    emulate -L zsh
+    zle -F $1
+    exec {1}>&-
+    while (( $#_zsh_asyncsource_files && !KEYS_QUEUED_COUNT && !PENDING )); do
+      source $_zsh_asyncsource_files[1]
+      shift _zsh_asyncsource_files
+    done
+    [[ -v _zsh_asyncsource_files[1] ]] && _zsh-asyncsource-schedule
+    return 0
+  }
+  zle -N _zsh-asyncsource
+  _zsh-asyncsource-schedule
+fi

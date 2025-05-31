@@ -1,0 +1,35 @@
+# duck
+#
+# duck string ...
+# perform search on duckduckgo.com
+
+local -a q
+local x
+
+for x in $@; do
+  # clean out newlines, however unlikely
+  x=${x//$'\n'/ }
+  if [[ $x =~ [[:blank:]] ]]; then
+    # squeeze whitespace, add quotes
+    x='"'${x//[[:blank:]]##/ }'"'
+  fi
+
+  q+=($x)
+done
+
+# join
+qq=${(j[+])q}
+# url escape various chars
+qq=${qq//'"'/%22}
+qq=${qq//\//%2F}
+qq=${qq//:/%3A}
+qq=${qq// /+}
+
+local url='https://duckduckgo.com/?q='$qq
+
+print 'search query: \e]8;;'$url'\e\\'${(j[ ])q}'\e]8;;\e\\'
+print '\e]8;;'$url'\e\\'$url'\e]8;;\e\\'
+
+if [[ ! -v SSH_CLIENT && $OSTYPE == darwin* ]]; then
+  open $url
+fi

@@ -1,0 +1,81 @@
+# Opinionated wrapper for ls, acts as a catchall alias matching `ll*` via
+# command_not_found_handler. After autoloading this function, for any command
+# starting with "ll" that doesn't otherwise exist, we'll try to interpret it as
+# an `ls` command. All chars after the initial "ll" are tested for matching our
+# flags, roughly based on actual ls flags.
+#
+# Examples:
+#   llat - ls -lAtrh
+#   llo - ls -lOh (macOS only)
+#   llH - ls -l (H disables -h)
+#
+# If any flag chars are are unrecognised, we just return 127, and act like a
+# normal command-not-found.
+#
+# Notes:
+#   * for capital ls flags, we accept lower case too
+#   * -H toggles off -h, otherwise -h is on by default
+#   * t and S imply -r
+#   * color is always enabled
+
+local cmd=$1
+
+if [[ $cmd =~ ^ll ]]; then
+  local flags="-l"
+  local human=h
+  local x
+
+  for x in ${(@s::)cmd#ll}; do
+    case $x in
+    a|A) # all
+      flags+=A
+    ;;
+    d) # list directory entries
+      flags+=d
+    ;;
+    s|S) # sort by size
+      flags+=Sr
+    ;;
+    t) # sort by modification time
+      flags+=tr
+    ;;
+    r) # reverse sort order
+      flags+=r
+    ;;
+    o|O) # list file flags, macOS only
+      [[ $OSTYPE != darwin* ]] && flags= && break
+      flags+=O
+    ;;
+    @) # list extended attributes, macOS only
+      [[ $OSTYPE != darwin* ]] && flags= && break
+      flags+=@
+    ;;
+    ,) # thousands separator, macOS and freebsd only
+      [[ $OSTYPE != (darwin|freebsd)* ]] && flags= && break
+      flags+=,
+      human=
+    ;;
+    g|G) # ignore redundant flags (--color=auto is always set)
+    ;;
+    h) # human readable sizes
+      human=h
+    ;;
+    H) # inhuman size listing
+      human=
+    ;;
+    *) # fail on unrecognized flag
+      flags=
+      break
+    ;;
+    esac
+  done
+
+  if [[ -n $flags ]]; then
+    shift argv
+    ls ${flags}${human}F --color=auto $*
+    return
+  fi
+fi
+
+print >&2 "zsh: command not found: $0"
+return 127

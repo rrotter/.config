@@ -1,0 +1,21 @@
+# complist
+#
+# list all completers in $fpath whose name matches a binary in $path
+
+complist () {
+  local p b
+  local found=()
+  for p in $fpath; do
+    if [[ -d $p ]]; then
+      for b in $(/bin/ls -1 $p | egrep '^_' | sed 's/^.//'); do
+        # match functions and builtins, not just commands
+        type $b &>/dev/null && found+=$b
+      done
+      if [[ ! -z $found ]]; then
+        /bin/ls -d --color=auto $p
+        print -c $found
+        found=()
+      fi
+    fi
+  done
+}

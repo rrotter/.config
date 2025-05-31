@@ -1,0 +1,35 @@
+#!/usr/bin/env -S zsh --no-rcs
+# binfo
+#
+# Try to figure out what package a file came from
+
+if (( $# != 1 )); then
+  echo "${0}: exactly one argument expected" >&2
+  return 1
+fi
+
+local bin=$1:A
+local mgr pkg ver
+
+if [[ -v HOMEBREW_PREFIX && $bin =~ ^$HOMEBREW_PREFIX/Cellar/ ]]; then
+  local parts=(${(@s:/:)${bin##$HOMEBREW_PREFIX/Cellar/}})
+  mgr=homebrew
+  pkg=$parts[1]
+  ver=$parts[2]
+elif [[ -v commands[dpkg] && -r /var/lib/dpkg/ ]]; then
+  # get bins under both / and /usr
+  # this is slighly wrong (not left anchored), but works well enough
+  local re=${bin:s|/usr|'^(/usr|)'}'$'
+  if [[ -v commands[rg] ]]; then
+    local dpkg_list=$(rg -l $re /var/lib/dpkg/info/ --glob='*.list' -m1)
+  else
+    local dpkg_list=$(grep -Erl $re /var/lib/dpkg/info/ --include='*.list' -m1)
+  fi
+  pkg=${${dpkg_list:t}%.list}
+  ver=$(grep "^Package: $pkg" /var/lib/dpkg/status -m1 -A20 | grep '^Version:' -m1)
+  [[ -n $pkg && -n $ver ]] && mgr=dpkg
+fi
+
+if [[ -n $mgr ]]; then
+  print "$mgr: $pkg ($ver)"
+fi

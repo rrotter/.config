@@ -1,0 +1,50 @@
+# create temp fakes of zsh builtins so we can source .zshenv w/o errors
+alias setopt=:
+source ~/.zshenv
+unalias setopt
+
+# macOS: stop yelling about bash
+export BASH_SILENCE_DEPRECATION_WARNING=1
+
+# interactive shells only
+if [[ $- == *i* ]]; then
+  # bash history settings
+  HISTCONTROL=ignoreboth
+  shopt -s histappend
+  HISTFILE=$XDG_STATE_HOME/bash_history
+  HISTSIZE=100000
+  HISTFILESIZE=100000
+  HISTTIMEFORMAT="%e.%-m.%Y %H:%M  "
+
+  ## completion ##
+  if [[ -r "${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh" ]]; then
+    source "${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh"
+  fi
+  complete -C tk tk
+  complete -C tofu tofu
+
+  ## local path ##
+  [[ ":$PATH:" == *:$HOME/.local/bin:* ]] || PATH=~/.local/bin:"$PATH"
+  [[ ":$PATH:" == *:$HOME/.config/libexec:* ]] || PATH=~/.config/libexec:"$PATH"
+
+  ## aliases ##
+  alias -- -='cd -'
+  alias ..='cd ..'
+  alias g=git
+  alias ls='ls -F --color=auto'
+  alias l='ls' la='ls -A' l1='\ls -1' ll='ls -lh' lla='ls -lAh'
+  alias wat='type -a'
+  # fix bin names
+  if [[ ${EDITOR##*/} == "nvim" ]]; then
+    [[ $(realpath $(which vim)) =~ /nvim$ ]] || alias vim=nvim
+    [[ $(realpath $(which vi)) =~ /nvim$ ]] || alias vi=nvim
+  fi
+
+  path () {
+    local p
+    local IFS=:
+    for p in $PATH; do
+      echo $p
+    done
+  }
+fi
