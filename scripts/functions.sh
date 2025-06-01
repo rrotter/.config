@@ -39,7 +39,7 @@ assert_not_present () {
 #
 # usage: mk_file file
 #
-# touch file only if it doens't exist, and assert that it is a regular file.
+# touch file only if it doesn't exist, and assert that it is a regular file.
 # $file must be an absolute path.
 #
 ##

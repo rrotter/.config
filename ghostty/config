@@ -41,7 +41,7 @@ theme = iTerm2 Light Background
 # Don't break the option key.
 macos-option-as-alt = false
 
-# rm unwanted tab naviagation bindings
+# rm unwanted tab navigation bindings
 keybind = cmd+physical:one=unbind
 keybind = cmd+physical:two=unbind
 keybind = cmd+physical:three=unbind

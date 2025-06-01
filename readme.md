@@ -32,7 +32,7 @@ List of files in my `~/.private/` repo:
 ~/.private/aws/config # configure aws profiles and regions
 ~/.private/git/config # user.name, user.email, user.signingkey, commit.gpgsign
 ~/.private/git/allowedSigners # list of ssh keys I trust to sign git commits
-~/.private/git/mailmap # beautify my collegues email addresses in `git log`
+~/.private/git/mailmap # beautify email addresses in `git log`
 ~/.private/ssh_config.d/ # several additional ssh config files that get symlinked into ~/.ssh/config.d/ on a per-host basis
 ```
 

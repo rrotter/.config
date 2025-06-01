@@ -18,7 +18,7 @@ if [[ -v HOMEBREW_PREFIX && $bin =~ ^$HOMEBREW_PREFIX/Cellar/ ]]; then
   ver=$parts[2]
 elif [[ -v commands[dpkg] && -r /var/lib/dpkg/ ]]; then
   # get bins under both / and /usr
-  # this is slighly wrong (not left anchored), but works well enough
+  # this is slightly wrong (not left anchored), but works well enough
   local re=${bin:s|/usr|'^(/usr|)'}'$'
   if [[ -v commands[rg] ]]; then
     local dpkg_list=$(rg -l $re /var/lib/dpkg/info/ --glob='*.list' -m1)
