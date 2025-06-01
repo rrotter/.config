@@ -23,7 +23,7 @@ linux*)
   # Don't set LC_TIME, en_GB is missing on most Debian installs
   export TIME_STYLE="+%e %b  %Y"$'\n'"%e %b %H:%M"
   # fix debian renaming of fd
-  [[ :$PATH: == *:/usr/lib/cargo/bin:* ]] || PATH=$PATH:/usr/lib/cargo/bin
+  [[ :$PATH: != *:/usr/lib/cargo/bin:* && -d /usr/lib/cargo/bin ]] && PATH=$PATH:/usr/lib/cargo/bin
 ;;
 esac
 

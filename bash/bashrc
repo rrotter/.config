@@ -34,10 +34,15 @@ if [[ $- == *i* ]]; then
   alias ls='ls -F --color=auto'
   alias l='ls' la='ls -A' l1='\ls -1' ll='ls -lh' lla='ls -lAh'
   alias wat='type -a'
-  # fix bin names
-  if [[ ${EDITOR##*/} == "nvim" ]]; then
-    [[ $(realpath $(which vim)) =~ /nvim$ ]] || alias vim=nvim
-    [[ $(realpath $(which vi)) =~ /nvim$ ]] || alias vi=nvim
+
+  ## editor ##
+  if type nvim &>/dev/null; then
+    export EDITOR=nvim
+    alias vi=nvim vim=nvim
+  elif type vim &>/dev/null; then
+    export EDITOR=vim
+  else
+    export EDITOR=vi
   fi
 
   path () {

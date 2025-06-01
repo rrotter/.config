@@ -77,10 +77,10 @@ alias 64=base64 p='print -l' path='print -l $path' fpath='print -l $fpath' -='cd
 alias g=git gg='git grep' remote='git remote --verbose'
 # alias git commands with barewords
 () {
-  local cmd; for cmd in \
-    add blame br branch cherry-pick co com ci commit di dis fetch fixup \
+  local cmd; for cmd (
+    add blame br branch cherry-pick co com ci commit di dis fetch fixup
     lo lol merge pull push rebase sho show st stash web wt worktree
-  alias $cmd="git ${cmd}"
+  ) alias $cmd="git ${cmd}"
 }
 
 # decoration
@@ -100,6 +100,7 @@ if (( $UID > 500 )); then
 
   # zsh global aliases
   alias -g C='| wc -l'
+  [[ -v commands[delta] ]] && alias -g D='| delta'
   alias -g G='|& grep -i' V='|& grep -vi'
   alias -g L='|& less'
   alias -g S='| sort' U='| uniq'
