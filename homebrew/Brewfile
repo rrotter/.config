@@ -1,39 +1,32 @@
-def noln(formula)
-  brew formula, link: false
-end
-
-def link(formula)
-  brew formula, link: true
-end
-
-def cask_nobin(mycask)
-  cask mycask, args: { no_bin: true }
-end
-
 # prevent silent use of root access
 system "sudo -k"
 
-tap "homebrew/cask" if Tap.fetch("homebrew/cask").installed?
+# don't install or remove official taps
+Tap.all.filter{|x| x.official? && x.installed? && !x.core_tap?}.each{|x| tap x.name}
+# install my tap
 tap "rattatap/tap"
 
 # cli tools
-noln "bind"; noln "jemalloc"; noln "libidn2"
+%w[bind jemalloc libidn2].each{|x| brew x, link: false}
 brew "dos2unix"
 brew "duti" # for setting mac file handlers
 brew "fastfetch"
 brew "fd"
 brew "fzf"
+brew "git-delta"
 brew "glow" # markdown
 brew "hyperfine"
-brew "jq"; noln "oniguruma"
+brew "jq"; brew "oniguruma", link: false
 brew "less"
 brew "neovim"; brew "luv"; brew "tree-sitter"
 brew "ripgrep"
 brew "tlrc" # tldr
 brew "tmux"
 brew "tree"
+brew "typos-cli"
 brew "unar"
 brew "watch"
+brew "xh" # http client
 brew "zsh-completions"
 brew "zstd"
 
@@ -51,40 +44,30 @@ brew "sslscan"
 brew "terraform"
 brew "trivy"
 
-# kubectl + plugins
-brew "kubernetes-cli"
-brew "kubectl-rook-ceph"
-brew "kubelogin"
-brew "kubecolor"
-
-# kubernetes
-brew "kubeseal"
+# kubectl
 brew "helm"
 brew "k9s"
+brew "kubecolor"
+brew "kubectl-rook-ceph"
+brew "kubelogin"
+brew "kubernetes-cli"
+brew "kubeseal"
 brew "tanka"; brew "jsonnet"; brew "jsonnet-bundler"
 
 # homebrew development
 brew "actionlint"
 brew "bash-completion"
-noln "shellcheck"
-noln "shfmt"
-
-unless Hardware::CPU.virtualized?
-  # vm
-  brew "lima"
-  brew "kind"
-  brew "podman"
-  cask "utm"
-end
+brew "shellcheck", link: false
+brew "shfmt", link: false
 
 # dev
 brew "gh"
 brew "glab"
 cask "hex-fiend"
 cask "iterm2"
-cask_nobin "ghostty"
+cask "ghostty", args: { no_bin: true }
 brew "python"
-link "ruby"
+brew "ruby", link: true
 
 unless Hardware::CPU.virtualized?
   brew "mas"
@@ -103,7 +86,7 @@ unless Hardware::CPU.virtualized?
   cask "skim"
   cask "slack"
   cask "swiftbar" # scripts in menubar
-  cask_nobin "tower"
+  cask "tower", args: { no_bin: true }
   mas "Dato", id: 1470584107
   mas "Deliveries", id: 290986013
   mas "Numbers", id: 409203825
@@ -113,6 +96,12 @@ unless Hardware::CPU.virtualized?
   # misc tools
   mas "Mactracker", id: 430255202
   brew "ykman" # yubikey
+
+  # vm
+  brew "lima"
+  brew "kind"
+  brew "podman"
+  cask "utm"
 
   # annoyances
   cask "notunes"
@@ -124,6 +113,4 @@ unless Hardware::CPU.virtualized?
 end
 
 # common dependencies
-noln "gettext"
-noln "openssl@3"
-noln "pcre2"
+%w[gettext openssl@3 pcre2].each{|x| brew x, link: false}
