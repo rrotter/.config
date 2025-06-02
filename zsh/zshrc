@@ -103,6 +103,7 @@ if (( $UID > 500 )); then
   [[ -v commands[delta] ]] && alias -g D='| delta'
   alias -g G='|& grep -i' V='|& grep -vi'
   alias -g L='|& less'
+  alias -g DN='>/dev/null' 2DN='2>/dev/null'
   alias -g S='| sort' U='| uniq'
   # allow `fd` to use `rg` style hidden flag
   [[ -v commands[fd] ]] && alias -g -- -.=--hidden
