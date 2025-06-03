@@ -8,6 +8,7 @@ if (( $# != 1 )); then
   return 1
 fi
 
+local WAT_INDENT=${WAT_INDENT+$WAT_INDENT  }
 local bin=$1:A
 local mgr pkg ver
 
@@ -31,5 +32,5 @@ elif [[ -v commands[dpkg] && -r /var/lib/dpkg/ ]]; then
 fi
 
 if [[ -n $mgr ]]; then
-  print "$mgr: $pkg ($ver)"
+  print "$WAT_INDENT$mgr: $pkg ($ver)"
 fi

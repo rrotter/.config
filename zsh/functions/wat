@@ -6,13 +6,10 @@ wat () {
   local -A color=(ok '01;34' err '01;31' ln '35' ex '31')
   local -a grep=(grep --color=auto -E)
 
-  if [[ -v wat_indt ]]; then
-    local wat_indt="${wat_indt}└─ "
-  else
-    local wat_indt=""
-  fi
+  local WAT_INDENT=${WAT_INDENT+${WAT_INDENT}└─ }
   local ret=0
-  local x line src target nfo
+  local x line src target
+  local match mbegin mend MATCH BEGIN MEND # don't leak pattern match parameters
   local -A seen
   for x in $@; do
     seen=()
@@ -25,34 +22,30 @@ wat () {
         [[ -v seen[$src] ]] && continue || seen[$src]=
         if [[ -L $target ]]; then
           # symlink commands
-          echo "$wat_indt$line -> $src" | GREP_COLOR="$color[ln]" GREP_COLORS="mt=$color[ln]" $grep '/[^ ]+ '
+          echo "$WAT_INDENT$line -> $src" | GREP_COLOR="$color[ln]" GREP_COLORS="mt=$color[ln]" $grep '/[^ ]+ '
         else
           # other commands
-          echo $wat_indt$line | GREP_COLOR="$color[ex]" GREP_COLORS="mt=$color[ex]" $grep '/.*'
+          echo $WAT_INDENT$line | GREP_COLOR="$color[ex]" GREP_COLORS="mt=$color[ex]" $grep '/.*'
         fi
-        wat_indt=${wat_indt:s/└─ /   /}
+        WAT_INDENT=${WAT_INDENT:s/└─ /   /}
         # print package manager info
-        nfo=$(binfo $src)
-        if [[ -n $nfo ]]; then
-          print "$wat_indt  $nfo"
-        fi
+        binfo $src
         # print file type info
-        nfo=$(file -b "${src}" | head -1 | sed -E 's/( with . archi.*|, version.*)$//')
-        echo "$wat_indt  $nfo"
+        echo "$WAT_INDENT  $(file -b "${src}" | head -1 | sed -E 's/( with . archi.*|, version.*)$//')"
       elif [[ $line =~ "shell (function|builtin)|alias|reserved word" ]]; then
         # anything except commands
-        echo $wat_indt$line | GREP_COLOR="$color[ok]" GREP_COLORS="mt=$color[ok]" $grep 'shell (function|builtin)|alias|reserved word'
-        wat_indt=${wat_indt:s/└─ /   /}
+        echo $WAT_INDENT$line | GREP_COLOR="$color[ok]" GREP_COLORS="mt=$color[ok]" $grep 'shell (function|builtin)|alias|reserved word'
+        WAT_INDENT=${WAT_INDENT:s/└─ /   /}
         if [[ $line =~ "^${x} is an alias for [0-9A-Za-z_\-]+$" ]]; then
           # recurse on simple aliases (alias w/ no args)
           $0 ${line##* }
         fi
       elif [[ $line =~ "not found" ]]; then
-        echo $wat_indt$line | GREP_COLOR="$color[err]" GREP_COLORS="mt=$color[err]" $grep 'not found'
+        echo $WAT_INDENT$line | GREP_COLOR="$color[err]" GREP_COLORS="mt=$color[err]" $grep 'not found'
       else
         ret=1
         echo "$0: failed. No idea how we got here. Please file a bug report!" >&2
-        echo $wat_indt$line
+        echo $WAT_INDENT$line
       fi
     done
   done
