@@ -1,9 +1,9 @@
 ## history settings ##
 HISTFILE=$XDG_STATE_HOME/zhistory
+ZCALC_HISTFILE=$XDG_STATE_HOME/zcalc_history
 HISTSIZE=2000000
 SAVEHIST=2000000
-setopt EXTENDED_HISTORY
-setopt HIST_FIND_NO_DUPS HIST_IGNORE_DUPS HIST_IGNORE_SPACE HIST_REDUCE_BLANKS
+setopt EXTENDED_HISTORY HIST_FIND_NO_DUPS HIST_IGNORE_DUPS HIST_IGNORE_SPACE HIST_REDUCE_BLANKS
 alias history='history -E'
 
 ## keybindings ##
@@ -42,6 +42,8 @@ case $OSTYPE in
 darwin*)
   [[ -d /Applications/Tower.app ]] && alias tower=/Applications/Tower.app/Contents/MacOS/gittower
   [[ -v commands[limactl] ]] && alias limactl='limactl --tty=false'
+  # Fix broken macOS zsh help
+  HELPDIR=/usr/share/zsh/$ZSH_VERSION/help
 ;;
 esac
 
@@ -63,10 +65,10 @@ else
   export EDITOR=vi
 fi
 
-## functions ##
-autoload -Uz run-help zmv
+## builtin autoload functions ##
+autoload -Uz run-help zcalc zmv
 unalias run-help
-alias help=run-help which-command='type -a' zmv='noglob zmv'
+alias help=run-help which-command='type -a'
 
 ## misc. aliases ##
 # shortening

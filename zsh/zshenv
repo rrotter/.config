@@ -8,8 +8,6 @@ case $OSTYPE in
 darwin*)
   # proper time/date formats
   export LC_TIME=en_GB.UTF-8
-  # Fix broken macOS zsh help
-  HELPDIR=/usr/share/zsh/$ZSH_VERSION/help
 
   # homebrew setup
   case ${CPUTYPE-$MACHTYPE} in
