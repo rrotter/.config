@@ -1,5 +1,4 @@
 export LANG=en_US.UTF-8
-export LC_COLLATE=C.UTF-8
 
 # Disable OS vendor zshrc. If there is anything useful there, add it to `~/.zshrc`.
 setopt NO_GLOBAL_RCS
@@ -20,6 +19,10 @@ linux*)
   # Set proper time formats, at least for GNU Coreutils
   # Don't set LC_TIME, en_GB is missing on most Debian installs
   export TIME_STYLE="+%e %b  %Y"$'\n'"%e %b %H:%M"
+  # Partial fix for horrible LC_COLLATE configs in glibc locales. This puts .dotfiles back at
+  # the top, but makes sorting case sensitive. Proper fix would require a fully custom locale.
+  # also see: https://www.unicode.org/Public/UCA/latest/allkeys.txt
+  export LC_COLLATE=C.UTF-8
   # fix debian renaming of fd
   [[ :$PATH: != *:/usr/lib/cargo/bin:* && -d /usr/lib/cargo/bin ]] && PATH=$PATH:/usr/lib/cargo/bin
 ;;
