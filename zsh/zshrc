@@ -32,7 +32,7 @@ bindkey '^Z' zle-fg
 
 ## zsh shell options ##
 setopt AUTO_CD COMBINING_CHARS EXTENDED_GLOB INTERACTIVE_COMMENTS NO_CASE_GLOB
-cdpath=(~ ~/Documents ${HOMEBREW_PREFIX+$HOMEBREW_PREFIX/Library})
+cdpath=(~ ~/Documents)
 disable log r - # useless zsh builtins
 TIMEFMT=$'\t%E real\t%U user\t%S sys\t(%P cpu)'
 REPORTTIME=10
