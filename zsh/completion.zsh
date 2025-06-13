@@ -14,9 +14,17 @@ zstyle ':completion:*:*:*:users' ignored-patterns '_*'
 zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
 # git filename completion: partially case sensitive
 zstyle ':completion::complete:git-*:argument-rest:*-files' matcher 'm:{[:lower:]}={[:upper:]}'
-# add _expand_alias completer, to expand global aliases
-zstyle ':completion:*' completer _complete _expand_alias _ignored
-zstyle ':completion:*' regular false
+# expand global aliases when _not_ in the command position
+zstyle ':completion:*' completer _expand_trailing_alias _complete _ignored
+_expand_trailing_alias () {
+  [[ $LBUFFER = *[^\ ]*[\ ]*[^\ ] ]] || return 1 # don't expand first word
+  local word=$IPREFIX$PREFIX$SUFFIX$ISUFFIX
+  local tmp=$galiases[$word]
+  [[ -n $tmp ]] || return 1
+  local -a toks=(${(z)LBUFFER})
+  [[ $toks[-2] = [\|] ]] && return 1 # don't expand after pipe
+  [[ -n $tmp ]] && _wanted aliases expl alias compadd -UQ -- ${tmp%%[[:blank:]]##} || return 1
+}
 
 ## configure completions for specific commands ##
 compdef _kubectl kubecolor
