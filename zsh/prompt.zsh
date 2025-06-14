@@ -43,13 +43,9 @@ __terminal_integration_chpwd() {
 }
 
 # zsh hooks
-autoload -Uz add-zsh-hook
-
-add-zsh-hook precmd __async_prompt
-add-zsh-hook chpwd __clear_rprompt
-add-zsh-hook preexec __async_reap
-add-zsh-hook preexec __terminal_integration_preexec
-add-zsh-hook precmd __terminal_integration_precmd
+typeset -aU chpwd_functions=( __clear_rprompt $chpwd_functions )
+typeset -aU precmd_functions=( __async_prompt __terminal_integration_precmd $precmd_functions )
+typeset -aU preexec_functions=( __async_reap __terminal_integration_preexec $preexec_functions )
 
 __async_prompt () {
   exec {__git_prompt_fd} < <(__async_prompt.git-status)
