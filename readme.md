@@ -2,9 +2,10 @@
 
 zsh, git, ssh, homebrew, kubectl, and other configuration
 
-This opinionated repo expects nearly all config to live in `~/.config`. That's why I even have
-scripts in this directory: I keep my `~/.local` entirely ephemeral. For programs that are
-absolutely resistant to using `XDG_CONFIG_HOME`, we set up a small number of symlinks.
+This opinionated repo expects nearly all config to live in `~/.config`. That's why even scripts
+are in this directory, rather than the usual `~/.local/bin`: I keep `~/.local` entirely
+ephemeral. A handful of symlinks are created during setup for programs that are absolutely
+resistant to using `XDG_CONFIG_HOME`.
 
 I keep a few files containing personal settings in a separate private repo which I checkout to
 to `~/.private`. This is where I keep things that are environment specific like email addresses
