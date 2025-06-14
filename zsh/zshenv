@@ -61,5 +61,6 @@ export KUBECOLOR_PRESET=light
 
 ## pager / man ##
 export MANLESS='$MAN_PN'
-export MANPAGER='less -Dd+b -Du+m'
+export MANPAGER='less -~ -Dd+b -Du+m -+F'
 export LESS='-FR --use-color -DP'
+export PAGER=less

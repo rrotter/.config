@@ -149,4 +149,6 @@ if (( $UID > 500 )); then
   }
   zle -N _zsh-asyncsource
   _zsh-asyncsource-schedule
+else
+  PS1='%n@%m:%~ %# '
 fi

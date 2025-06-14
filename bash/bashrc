@@ -4,10 +4,14 @@ source ~/.zshenv
 unalias setopt
 
 # macOS: stop yelling about bash
-export BASH_SILENCE_DEPRECATION_WARNING=1
+[[ $OSTYPE = darwin* && $BASH_VERSION = 3.* ]] \
+  && export BASH_SILENCE_DEPRECATION_WARNING=1
 
 # interactive shells only
 if [[ $- == *i* ]]; then
+  # minimal prompt
+  PS1='\u@\h:\w \$ '
+
   # bash history settings
   HISTCONTROL=ignoreboth
   shopt -s histappend
