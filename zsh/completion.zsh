@@ -44,10 +44,11 @@ fi
 compdef -d diff glow # unhelpful completions
 
 () {
-  # commands (and other things in the "command position") that we never want suggested
+  # commands and parameters that we never want suggested
   local IGNORE=(
-    'aliases|aws_completer|(brew|git|kubectl|podman)-*|kubecolor|bundler|less(echo|key)|sha(1|224)(|sum)|(|v)dir|(python|pip)3.*|which-command'
-    'comp(add|arguments|call|ctl|describe|files|groups|quote|set|tags|try|values|audit|def|dump|gen|init|install|lete|*funcs)|hist*s|zsh_sched*'
+    '_*|which-command|aliases|hist*s|zsh_sched*'
+    'aws_completer|(brew|git|kubectl|podman)-*|kubecolor|bundler|less(echo|key)|sha(1|224)(|sum)|(python|pip)3.*'
+    'comp(add|arguments|call|ctl|describe|files|groups|quote|set|tags|try|values|audit|def|dump|gen|init|install|lete|*funcs)'
   )
 
   # don't print errors when I fat-finger `mkdir` as `mdir`
@@ -58,22 +59,22 @@ compdef -d diff glow # unhelpful completions
       IGNORE+=(
         # unwanted binaries from apple
         '*[[:alpha:]]5.<->(|.pl)|(md|sha)<->sum|ht(digest|passwd|txt2dbm)|ab|checkgid|logresolve|rotatelogs'
-        'k(admin*|cc|dcsetup|destroy|getcred|init|list*|passwd|rb*|tutil|switch|cditto|ext*|mutil)'
+        'k(admin*|cc|dcsetup|destroy|getcred|init|list*|passwd|rb[5s]*|tutil|switch|cditto|ext[cflsu]*|mutil)|mkextunpack'
         'apple*camerad|hi(|d)util|mcx*|pwd_mkdb|pwpolicy|sdx|tclsh*|tk(con|mib|pp)|serverinfo|wish*'
         'DeRez|DirectoryS*|GetF*|ResM*|Rez|SetF*|SplitF*|cups*|lp*|ppd*|weakpass_edit'
         'j(ar*|ava*|cmd|con*|db|deps|hsdb|image|info|js|link|map|package|ps|runscript|shell|sta*)'
         'orbd|*pack200|rmi*|serialver|tnameserv|(key|policy|server)tool'
         # unwanted binaries from brew
-        '*.lima|luajit-2.*|idle3*|pydoc*|python3-*|wheel3*|2to3*|git2'
+        '*.lima|luajit-2.*|idle3*|pydoc*|python3-*|wheel3*|2to3*|git2|zsh-5*'
       )
-      # unhash non-executable junk that apple left in /usr/sbin
-      unset 'commands[authserver]' 'commands[envvars]' 'commands[envvars-std]' 'commands[iRATBW.mlmodelc]'
+      # unhash non-executable junk apple left in /usr/sbin, and .DS_Store just in case we have any in $path
+      unset 'commands[authserver]' 'commands[envvars]' 'commands[envvars-std]' 'commands[iRATBW.mlmodelc]' 'commands[.DS_Store]'
 
       # disable _java: java isn't normally installed, _java breaks if it gets activated on binstubs
       _java () { _default }
     ;;
     linux*)
-      IGNORE+=( 'fdfind|zsh5' )
+      IGNORE+=( '(|v)dir|fdfind|zsh5' )
     ;;
   esac
 
