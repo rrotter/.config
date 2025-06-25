@@ -98,9 +98,8 @@ unless Hardware::CPU.virtualized?
   brew "ykman" # yubikey
 
   # vm
-  brew "lima"
   brew "kind"
-  brew "podman"
+  %w[podman podman-compose].each{|x| brew x}
   cask "utm"
 
   # annoyances

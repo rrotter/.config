@@ -65,7 +65,7 @@ compdef -d diff glow # unhelpful completions
         'j(ar*|ava*|cmd|con*|db|deps|hsdb|image|info|js|link|map|package|ps|runscript|shell|sta*)'
         'orbd|*pack200|rmi*|serialver|tnameserv|(key|policy|server)tool'
         # unwanted binaries from brew
-        '*.lima|luajit-2.*|idle3*|pydoc*|python3-*|wheel3*|2to3*|git2|zsh-5*'
+        'luajit-2.*|idle3*|pydoc*|python3-*|wheel3*|2to3*|git2|zsh-5*'
       )
       # unhash non-executable junk apple left in /usr/sbin, and .DS_Store just in case we have any in $path
       unset 'commands[authserver]' 'commands[envvars]' 'commands[envvars-std]' 'commands[iRATBW.mlmodelc]' 'commands[.DS_Store]'
@@ -82,4 +82,4 @@ compdef -d diff glow # unhelpful completions
 }
 
 # don't autocomplete subcommands for setting up autocomplete 🤦
-zstyle ':completion::complete:(gh|glab|helm|k9s|kind|kubec(tl|olor)|limactl|op|trivy):*:*' ignored-patterns 'completion'
+zstyle ':completion::complete:(gh|glab|helm|k9s|kind|kubec(tl|olor)|op|trivy):*:*' ignored-patterns 'completion'

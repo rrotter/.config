@@ -41,7 +41,6 @@ REPORTTIME=10
 case $OSTYPE in
 darwin*)
   [[ -d /Applications/Tower.app ]] && alias tower=/Applications/Tower.app/Contents/MacOS/gittower
-  [[ -v commands[limactl] ]] && alias limactl='limactl --tty=false'
   # Fix broken macOS zsh help
   HELPDIR=/usr/share/zsh/$ZSH_VERSION/help
 ;;
@@ -74,7 +73,6 @@ alias help=run-help which-command='type -a'
 # shortening
 alias 64=base64 p='print -l' path='print -l $path' fpath='print -l $fpath' -='cd -'
 [[ -v commands[k9s] ]] && alias 9=k9s
-[[ -v commands[kubectl] ]] && k=kubectl
 [[ -v commands[tofu] ]] && alias tf=tofu
 alias g=git gg='git grep' remote='git remote --verbose'
 # alias git commands with barewords
@@ -86,7 +84,7 @@ alias g=git gg='git grep' remote='git remote --verbose'
 }
 
 # decoration
-[[ -v commands[kubecolor] ]] && alias k=kubecolor kubectl=kubecolor
+[[ -v commands[kubecolor] ]] && alias k=kubecolor kubectl=kubecolor || [[ -v commands[kubectl] ]] && alias k=kubectl
 alias egrep='egrep --color=auto' fgrep='fgrep --color=auto' grep='grep --color=auto' rgrep='grep -r'
 alias ls='ls -F --color=auto' l='ls' la='ls -A' l1='\ls -1' ll='ls -lh' lla='ls -lAh'
 [[ -v commands[ip] ]] && alias ip='ip -color=auto'
