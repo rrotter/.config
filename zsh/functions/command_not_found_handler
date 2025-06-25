@@ -1,8 +1,8 @@
-# Opinionated wrapper for ls, acts as a catchall alias matching `ll*` via
-# command_not_found_handler. After autoloading this function, for any command
-# starting with "ll" that doesn't otherwise exist, we'll try to interpret it as
-# an `ls` command. All chars after the initial "ll" are tested for matching our
-# flags, roughly based on actual ls flags.
+# Opinionated wrapper for ls, acts as a catchall alias matching `ll*` and `l1*`
+# via command_not_found_handler. After autoloading this function, for any
+# command starting with "ll" or "l1" that doesn't otherwise exist, we'll try to
+# interpret it as an `ls` command. All chars after the initial "l" are tested
+# for matching our flags, roughly based on actual ls flags.
 #
 # Examples:
 #   llat - ls -lAtrh
@@ -15,18 +15,21 @@
 # Notes:
 #   * for capital ls flags, we accept lower case too
 #   * -H toggles off -h, otherwise -h is on by default
-#   * t and S imply -r
-#   * color is always enabled
+#   * -t and -S imply -r
+#   * -F and --color=auto always set
 
 local cmd=$1
 
-if [[ $cmd =~ ^ll ]]; then
-  local flags="-l"
+if [[ $cmd =~ ^l[l1] ]]; then
+  local flags=""
   local human=h
   local x
 
-  for x in ${(@s::)cmd#ll}; do
+  for x in ${(@s::)cmd#l}; do
     case $x in
+    1) # single column
+      flags+=1
+    ;;
     a|A) # all
       flags+=A
     ;;
@@ -63,6 +66,9 @@ if [[ $cmd =~ ^ll ]]; then
     H) # inhuman size listing
       human=
     ;;
+    l) # long
+      flags+=l
+    ;;
     *) # fail on unrecognized flag
       flags=
       break
@@ -72,7 +78,7 @@ if [[ $cmd =~ ^ll ]]; then
 
   if [[ -n $flags ]]; then
     shift argv
-    ls ${flags}${human}F --color=auto $*
+    ls -${flags}${human}F --color=auto $*
     return
   fi
 fi
