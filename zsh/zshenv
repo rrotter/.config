@@ -45,6 +45,7 @@ export HELM_CONFIG_HOME=$XDG_CONFIG_HOME/helm
 export HELM_DATA_HOME=$XDG_DATA_HOME/helm
 export IRBRC=$XDG_CONFIG_HOME/irbrc
 export KUBECACHEDIR=$XDG_CACHE_HOME/kube
+export KUBECOLOR_CONFIG=$XDG_CONFIG_HOME/kubecolor.yaml
 export LESSHISTFILE=$XDG_STATE_HOME/lesshst
 export SAML2AWS_CONFIGFILE=~/.aws/saml2aws
 export WGETRC=$XDG_CONFIG_HOME/wgetrc
@@ -55,9 +56,6 @@ export LSCOLORS='exfxcxdxbxegedabagacad'
 export LS_COLORS='di=34:ln=35:so=32:pi=33:ex=31:bd=34;46:cd=34;43:su=30;41:sg=30;46:tw=30;42:ow=30;43'
 # make grep blue; for BSD and GNU grep
 export GREP_COLOR='01;34'; export GREP_COLORS='mt=01;34'
-
-# bg=light
-export KUBECOLOR_PRESET=light
 
 ## pager / man ##
 export MANLESS='$MAN_PN'

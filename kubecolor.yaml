@@ -1,0 +1,4 @@
+---
+preset: light
+theme:
+  default: !color
