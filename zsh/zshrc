@@ -34,7 +34,7 @@ bindkey '^Z' zle-fg
 setopt AUTO_CD COMBINING_CHARS EXTENDED_GLOB INTERACTIVE_COMMENTS NO_CASE_GLOB
 cdpath=(~ ~/Documents)
 disable log r - # useless zsh builtins
-TIMEFMT=$'\t%E real\t%U user\t%S sys\t(%P cpu)'
+TIMEFMT=$'\t%*E real\t%*U user\t%*S sys\t(%P cpu)'
 REPORTTIME=10
 
 ## OS specific ##
@@ -100,7 +100,7 @@ if (( $UID > 500 )); then
 
   # zsh global aliases
   alias -g C='| wc -l'
-  [[ -v commands[delta] ]] && alias -g D='| delta'
+  [[ -v commands[delta] ]] && alias -g D='| delta --hyperlinks'
   alias -g G='|& grep -i' V='|& grep -vi'
   alias -g L='|& less'
   alias -g S='| sort' U='| uniq'
