@@ -36,6 +36,9 @@ if [[ $cmd =~ ^l[l1] ]]; then
     d) # list directory entries
       flags+=d
     ;;
+    n) # numeric uid/git
+      flags+=n
+    ;;
     s|S) # sort by size
       flags+=Sr
     ;;
