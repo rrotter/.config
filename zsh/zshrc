@@ -42,7 +42,7 @@ case $OSTYPE in
 darwin*)
   [[ -d /Applications/Tower.app ]] && alias tower=/Applications/Tower.app/Contents/MacOS/gittower
   # Fix broken macOS zsh help
-  HELPDIR=/usr/share/zsh/$ZSH_VERSION/help
+  : ${HELPDIR:=/usr/share/zsh/$ZSH_VERSION/help}
 ;;
 esac
 
