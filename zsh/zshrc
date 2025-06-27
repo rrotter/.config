@@ -30,6 +30,19 @@ zle-fg () {
 zle -N zle-fg
 bindkey '^Z' zle-fg
 
+# automatically transform ... to ../.. unless it doesn't look like a path
+zle-insert-dot () {
+  [[ $LBUFFER = *.. && $LBUFFER != *[[:alnum:].\\].. ]] && LBUFFER+=/.. || zle self-insert
+}
+zle -N zle-insert-dot
+bindkey . zle-insert-dot
+
+# delete trailing /.. if it looks like zle-insert-dot wrote it
+backward-delete-char () {
+  [[ $LBUFFER = *../.. ]] && LBUFFER=${LBUFFER%/..} || zle .backward-delete-char
+}
+zle -N backward-delete-char
+
 ## zsh shell options ##
 setopt AUTO_CD COMBINING_CHARS EXTENDED_GLOB INTERACTIVE_COMMENTS NO_CASE_GLOB
 cdpath=(~ ~/Documents)
