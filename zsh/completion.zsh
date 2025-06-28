@@ -46,8 +46,8 @@ compdef -d diff glow # unhelpful completions
 () {
   # commands and parameters that we never want suggested
   local IGNORE=(
-    '_*|which-command|aliases|hist*s|zsh_sched*'
-    'aws_completer|(brew|git|kubectl|podman)-*|kubecolor|bundler|less(echo|key)|sha(1|224)(|sum)|(python|pip)3.*'
+    '_*|which-command|aliases|hist*s|zsh_sched*|backward-*-*|(up|down)-line-or-beginning-search|zle-*|bashbug'
+    'aws_completer|(brew|git|kubectl|podman)-*|kubecolor|bundler|less(echo|key)|sha(1|224)(|sum)|(python|pip)3.*|pod(2*|checker)'
     'comp(add|arguments|call|ctl|describe|files|groups|quote|set|tags|try|values|audit|def|dump|gen|init|install|lete|*funcs)'
   )
 
@@ -61,7 +61,7 @@ compdef -d diff glow # unhelpful completions
         '*[[:alpha:]]5.<->(|.pl)|(md|sha)<->sum|ht(digest|passwd|txt2dbm)|ab|checkgid|logresolve|rotatelogs'
         'k(admin*|cc|dcsetup|destroy|getcred|init|list*|passwd|rb[5s]*|tutil|switch|cditto|ext[cflsu]*|mutil)|mkextunpack'
         'apple*camerad|hi(|d)util|mcx*|pwd_mkdb|pwpolicy|sdx|tclsh*|tk(con|mib|pp)|serverinfo|wish*'
-        'DeRez|DirectoryS*|GetF*|ResM*|Rez|SetF*|SplitF*|cups*|lp*|ppd*|weakpass_edit'
+        'DeRez|DirectoryS*|GetF*|ResM*|Rez|SetF*|SplitF*|cups*|lp*|ppd*|weakpass_edit|update_*'
         'j(ar*|ava*|cmd|con*|db|deps|hsdb|image|info|js|link|map|package|ps|runscript|shell|sta*)'
         'orbd|*pack200|rmi*|serialver|tnameserv|(key|policy|server)tool'
         # unwanted binaries from brew

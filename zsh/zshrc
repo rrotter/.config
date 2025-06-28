@@ -37,6 +37,14 @@ zle-insert-dot () {
 zle -N zle-insert-dot
 bindkey . zle-insert-dot
 
+# better shell history navigation
+autoload -Uz up-line-or-beginning-search
+autoload -Uz down-line-or-beginning-search
+zle -N up-line-or-beginning-search
+zle -N down-line-or-beginning-search
+bindkey "^[[A" up-line-or-beginning-search # Up
+bindkey "^[[B" down-line-or-beginning-search # Down
+
 # delete trailing /.. if it looks like zle-insert-dot wrote it
 backward-delete-char () {
   [[ $LBUFFER = *../.. ]] && LBUFFER=${LBUFFER%/..} || zle .backward-delete-char
