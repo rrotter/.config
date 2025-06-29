@@ -29,7 +29,7 @@ _expand_trailing_alias () {
 ## configure completions for specific commands ##
 compdef _kubectl kubecolor
 # import bash completions
-autoload -Uz bashcompinit && bashcompinit
+autoload -Uz bashcompinit && bashcompinit && unfunction bashcompinit
 complete -C aws_completer aws
 complete -C tk tk
 complete -C tofu tofu
