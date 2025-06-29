@@ -92,7 +92,7 @@ alias help=run-help which-command='type -a'
 
 ## misc. aliases ##
 # shortening
-alias 64=base64 p='print -l' path='print -l $path' fpath='print -l $fpath' -='cd -'
+alias 64=base64 p='print -l --' path='print -l $path' fpath='print -l $fpath' -='cd -'
 [[ -v commands[k9s] ]] && alias 9=k9s
 [[ -v commands[tofu] ]] && alias tf=tofu
 alias g=git gg='git grep' remote='git remote --verbose'
@@ -122,7 +122,7 @@ if (( $UID > 500 )); then
   # zsh global aliases
   alias -g C='| wc -l'
   [[ -v commands[delta] ]] && alias -g D='| delta --hyperlinks'
-  alias -g G='|& grep -i' V='|& grep -vi'
+  alias -g G='|& grep --' I='|& grep -i --' V='|& grep -v --'
   alias -g L='|& less'
   alias -g S='| sort' U='| uniq'
   # allow `fd` to use `rg` style hidden flag
