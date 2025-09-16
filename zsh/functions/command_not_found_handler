@@ -27,26 +27,17 @@ if [[ $cmd =~ ^l[l1] ]]; then
 
   for x in ${(@s::)cmd#l}; do
     case $x in
-    1) # single column
-      flags+=1
+    [1dlnr]) # add any of these flags w/o modification
+      flags+=$x
     ;;
     a|A) # all
       flags+=A
-    ;;
-    d) # list directory entries
-      flags+=d
-    ;;
-    n) # numeric uid/git
-      flags+=n
     ;;
     s|S) # sort by size
       flags+=Sr
     ;;
     t) # sort by modification time
       flags+=tr
-    ;;
-    r) # reverse sort order
-      flags+=r
     ;;
     o|O) # list file flags, macOS only
       [[ $OSTYPE != darwin* ]] && flags= && break
@@ -68,9 +59,6 @@ if [[ $cmd =~ ^l[l1] ]]; then
     ;;
     H) # inhuman size listing
       human=
-    ;;
-    l) # long
-      flags+=l
     ;;
     *) # fail on unrecognized flag
       flags=
