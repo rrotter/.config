@@ -30,7 +30,7 @@ _expand_trailing_alias () {
 compdef _kubectl kubecolor
 # import bash completions
 autoload -Uz bashcompinit && bashcompinit && unfunction bashcompinit
-complete -C aws_completer aws
+complete -C ${commands[aws_completer]:-/usr/libexec/aws_completer} aws
 complete -C tk tk
 complete -C tofu tofu
 complete -C terraform terraform
