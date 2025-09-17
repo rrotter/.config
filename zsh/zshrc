@@ -131,10 +131,10 @@ if (( $UID > 500 )); then
   # fpath
   fpath=(
     ~/.config/zsh/functions
+    ${HOMEBREW_PREFIX+$HOMEBREW_PREFIX/share/zsh/site-functions}
     $fpath
+    ${HOMEBREW_PREFIX+$HOMEBREW_PREFIX/share/zsh-completions}(N)
     ${GHOSTTY_RESOURCES_DIR+$GHOSTTY_RESOURCES_DIR/../zsh/site-functions}
-    $HOMEBREW_PREFIX/share/zsh/site-functions(N)
-    $HOMEBREW_PREFIX/share/zsh-completions(N)
   )
 
   # local functions
