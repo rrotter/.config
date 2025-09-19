@@ -22,7 +22,8 @@ if [[ $- == *i* ]]; then
 
   ## completion ##
   if [[ -r "${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh" ]]; then
-    source "${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh"
+    # silince useless errors on bash 3
+    source "${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh" 2> /dev/null
   fi
   complete -C tk tk
   complete -C tofu tofu
