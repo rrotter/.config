@@ -11,6 +11,7 @@ mkdir -p -m 700 ~/.ssh/config.d/
 # link files
 mk_link .config/bash/bashrc ~/.bash_profile
 mk_link .config/bash/bashrc ~/.bashrc
+mk_link .config/curlrc ~/.curlrc
 mk_link ../.config/ssh/config ~/.ssh/config
 mk_link .config/zsh/zshenv ~/.zshenv
 mk_link .config/zsh/zshrc ~/.zshrc
