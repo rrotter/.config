@@ -1,13 +1,15 @@
 # prevent silent use of root access
 system "sudo -k"
 
-# don't install or remove official taps
-Tap.all.filter{|x| x.official? && x.installed? && !x.core_tap?}.each{|x| tap x.name}
+# install official taps for formula development
+tap "homebrew/cask"
+tap "homebrew/core"
 # install my tap
 tap "rattatap/tap"
 
 # cli tools
-%w[bind jemalloc libidn2].each{|x| brew x, link: false}
+brew "rattatap/tap/bind-dnstools"; brew "libidn2", link: false
+brew "rattatap/tap/curl-completion"
 brew "dos2unix"
 brew "duti" # for setting mac file handlers
 brew "fastfetch"
@@ -16,7 +18,7 @@ brew "fzf"
 brew "git-delta"
 brew "glow" # markdown
 brew "hyperfine"
-brew "jq"; brew "oniguruma", link: false
+brew "jq"
 brew "less"
 brew "neovim"; brew "luv"; brew "tree-sitter"
 brew "ripgrep"
@@ -55,10 +57,7 @@ brew "kubeseal"
 brew "tanka"; brew "jsonnet"; brew "jsonnet-bundler"
 
 # homebrew development
-brew "actionlint"
 brew "bash-completion"
-brew "shellcheck", link: false
-brew "shfmt", link: false
 
 # dev
 brew "gh"
@@ -112,4 +111,4 @@ unless Hardware::CPU.virtualized?
 end
 
 # common dependencies
-%w[gettext openssl@3 pcre2].each{|x| brew x, link: false}
+%w[gettext oniguruma openssl@3 pcre2].each{|x| brew x, link: false}
