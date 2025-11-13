@@ -2,4 +2,4 @@
 
 cmd=kubectl
 command -v kubecolor >/dev/null 2>&1 && cmd=kubecolor
-$cmd version
+$cmd version "$@"

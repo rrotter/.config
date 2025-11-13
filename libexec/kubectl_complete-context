@@ -1,1 +1,7 @@
-kubectl-context
+#!/bin/sh
+
+# list contexts for completion, limit to 1
+[ $# -lt 2 ] && kubectl config view -o json | \
+  jq -r '."current-context" as $cc | .contexts[] | "\(.name)\tswitch context to \(.name)\(if .name == $cc then " CURRENT" else "" end)"'
+# disable filename completion
+printf ":4\n"
