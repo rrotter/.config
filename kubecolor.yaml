@@ -1,4 +1,4 @@
 ---
 preset: light
-theme:
-  default: !color
+theme: {default: ""}
+objFreshThreshold: 1h
