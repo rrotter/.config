@@ -39,6 +39,7 @@ export XDG_STATE_HOME=~/.local/state
 
 export BUNDLE_USER_CACHE=$XDG_CACHE_HOME/bundle
 export BUNDLE_USER_CONFIG=$XDG_CONFIG_HOME/bundle.yaml
+export GOCACHE=$XDG_CACHE_HOME/go-build
 export GOPATH=$XDG_DATA_HOME/go
 export HELM_CACHE_HOME=$XDG_CACHE_HOME/helm
 export HELM_CONFIG_HOME=$XDG_CONFIG_HOME/helm
