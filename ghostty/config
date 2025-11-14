@@ -22,6 +22,9 @@ macos-icon-screen-color = 000000
 shell-integration = none
 cursor-style-blink = false
 
+# disable visual bell
+bell-features = no-title
+
 # window size
 window-height = 40
 window-width = 110
