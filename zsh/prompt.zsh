@@ -25,69 +25,66 @@ PS1+='%(?..%(130?.%F{yellow}.%(141?.%F{cyan}.%(146?.%F{blue}.%F{red}))))%#%f '
 PS1=$'%{\e]133;A\a%}'${PS1}$'%{\e]133;B;\a%}'
 PS2=$'%{\e]133;A;k=s\a%}'${PS2}$'%{\e]133;B;\a%}'
 
-__terminal_integration_preexec() {
+__terminal_integration.hook.preexec() {
   print -n '\e]133;C\a'
   # set title
   print -rn $'\e]2;'"${(V)1}"$'\a'
 }
-__terminal_integration_precmd() {
+__terminal_integration.hook.precmd() {
   print -n '\e]133;D\a'
   # report cwd
   print -n '\e]7;kitty-shell-cwd://'"$HOST""$PWD"'\a'
   # set title
   print -rn $'\e]2;'"${(%):-%(4~|…/%3~|%~)}"$'\a'
 }
-__terminal_integration_chpwd() {
-  # report cwd
-  print -n '\e]7;kitty-shell-cwd://'"$HOST""$PWD"'\a'
-}
 
-# zsh hooks
-typeset -aU chpwd_functions=( __async_prompt_chpwd )
-typeset -aU precmd_functions=( __async_prompt_reap __async_prompt_precmd __terminal_integration_precmd )
-typeset -aU preexec_functions=( __async_prompt_reap __async_prompt_prexec __terminal_integration_preexec )
-
+## install hooks ##
+typeset -aU chpwd_functions=( __async_prompt.hook.chpwd )
+typeset -aU precmd_functions=( __async_prompt.reap __async_prompt.hook.precmd __terminal_integration.hook.precmd )
+typeset -aU preexec_functions=( __async_prompt.reap __async_prompt.hook.prexec __terminal_integration.hook.preexec )
 autoload -Uz add-zle-hook-widget
-add-zle-hook-widget zle-line-pre-redraw __async_prompt_zle_segment_trigger
+add-zle-hook-widget zle-line-pre-redraw __async_prompt.hook.zle_redraw
 
+## async prompt segment functions ##
 # track outstanding fds
 typeset -gaU __async_prompt_fds
 
-__async_prompt_zle_segment_trigger () {
+# on command line redraw, check if we need to render a segment for current command
+__async_prompt.hook.zle_redraw () {
   local cmd=${${(zA)BUFFER}[1]}
   if [[ $cmd = (k|kubectl|k9s|helm) ]]; then
     if [[ ! -v __KUBEPROMPT ]]; then
       local -i fd
       exec {fd} < <(echo "%F{blue}⎈%f$(kubectl config current-context)")
       __async_prompt_fds+=($fd)
-      zle -F $fd __async_prompt_set_kube_segment
+      zle -F $fd __async_prompt.callback.set_kube_segment
     fi
   else
     if [[ -v __KUBEPROMPT ]]; then
       unset __KUBEPROMPT
-      __async_prompt_draw_rprompt
+      __async_prompt.draw_rprompt
     fi
   fi
 }
 
 # at new prompt, set git segment, clear other segments
-__async_prompt_precmd () {
+__async_prompt.hook.precmd () {
   RPROMPT=$__GITPROMPT
   unset __KUBEPROMPT
   local -i fd
   exec {fd} < <(__async_prompt.git-status)
   __async_prompt_fds+=($fd)
-  zle -F $fd __async_prompt_set_git_segment
+  zle -F $fd __async_prompt.callback.set_git_segment
 }
 
 # on sending cmd, clear all segments except git
-__async_prompt_prexec () {
+__async_prompt.hook.prexec () {
   RPROMPT=$__GITPROMPT
   unset __KUBEPROMPT
 }
 
 # reap outstanding fds
-__async_prompt_reap () {
+__async_prompt.reap () {
   [[ -v __async_prompt_fds ]] || return
   local fd
   for fd in $__async_prompt_fds; do
@@ -98,22 +95,22 @@ __async_prompt_reap () {
 }
 
 # on chpwd, clear git segment
-__async_prompt_chpwd () {
+__async_prompt.hook.chpwd () {
   RPROMPT=
   unset __GITPROMPT
 }
 
-__async_prompt_set_git_segment () {
+__async_prompt.callback.set_git_segment () {
   __GITPROMPT="$(<&$1)"
-  __async_prompt_draw_rprompt $1
+  __async_prompt.draw_rprompt $1
 }
 
-__async_prompt_set_kube_segment () {
+__async_prompt.callback.set_kube_segment () {
   __KUBEPROMPT="$(<&$1)"
-  __async_prompt_draw_rprompt $1
+  __async_prompt.draw_rprompt $1
 }
 
-__async_prompt_draw_rprompt () {
+__async_prompt.draw_rprompt () {
   local rprompt=( $__KUBEPROMPT $__GITPROMPT )
   local new_RPROMPT=${(j. .)rprompt}
   if [[ $RPROMPT != $new_RPROMPT ]]; then
