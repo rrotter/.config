@@ -10,14 +10,10 @@ ZLE_RPROMPT_INDENT=
 # PS1 is expected to never change after this file is sourced
 # All dynamic content comes from prompt expansion:
 # https://zsh.sourceforge.io/Doc/Release/Prompt-Expansion.html
-# hostname, only if we're on SSH
-PS1=${SSH_CLIENT+'%F{168}%m%f '}
-# one segment path
-PS1+='%(3~.%1~.%(3/.%2~.%1~)) '
-# number of stopped jobs
-PS1+='%(1j.%F{blue}[%j]%f .)'
-# color the prompt char to show status
-# 130 (^C) yellow, 141 (SIGPIPE), 146 (^Z) blue, else: red
+# hostname (if we're on SSH), one segment path, number of stopped jobs
+PS1=${SSH_CLIENT+'%F{168}%m%f '}'%(3~.%1~.%(3/.%2~.%1~)) %(1j.%F{blue}[%j]%f .)'
+# color the prompt char to show exit status of last command
+# 130 (^C) yellow, 141 (SIGPIPE) cyan, 146 (^Z) blue, else: red
 PS1+='%(?..%(130?.%F{yellow}.%(141?.%F{cyan}.%(146?.%F{blue}.%F{red}))))%#%f '
 
 ## terminal integration ##
