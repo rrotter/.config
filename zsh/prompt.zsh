@@ -43,40 +43,88 @@ __terminal_integration_chpwd() {
 }
 
 # zsh hooks
-typeset -aU chpwd_functions=( __clear_rprompt $chpwd_functions )
-typeset -aU precmd_functions=( __async_prompt __terminal_integration_precmd $precmd_functions )
-typeset -aU preexec_functions=( __async_reap __terminal_integration_preexec $preexec_functions )
+typeset -aU chpwd_functions=( __async_prompt_chpwd )
+typeset -aU precmd_functions=( __async_prompt_reap __async_prompt_precmd __terminal_integration_precmd )
+typeset -aU preexec_functions=( __async_prompt_reap __async_prompt_prexec __terminal_integration_preexec )
 
-__async_prompt () {
-  exec {__git_prompt_fd} < <(__async_prompt.git-status)
-  zle -F $__git_prompt_fd __set_git_rprompt
-}
+autoload -Uz add-zle-hook-widget
+add-zle-hook-widget zle-line-pre-redraw __async_prompt_zle_segment_trigger
 
-__async_reap () {
-  # Minimal cleanup. For the full belt-and-suspenders solution, see:
-  # https://github.com/zsh-users/zsh-autosuggestions/blob/master/src/async.zsh
-  if [[ -n $__git_prompt_fd ]]; then
-    zle -F $__git_prompt_fd
-    exec {__git_prompt_fd}<&-
+# track outstanding fds
+typeset -gaU __async_prompt_fds
+
+__async_prompt_zle_segment_trigger () {
+  local cmd=${${(zA)BUFFER}[1]}
+  if [[ $cmd = (k|kubectl|k9s|helm) ]]; then
+    if [[ ! -v __KUBEPROMPT ]]; then
+      local -i fd
+      exec {fd} < <(echo "%F{blue}⎈%f$(kubectl config current-context)")
+      __async_prompt_fds+=($fd)
+      zle -F $fd __async_prompt_set_kube_segment
+    fi
+  else
+    if [[ -v __KUBEPROMPT ]]; then
+      unset __KUBEPROMPT
+      __async_prompt_draw_rprompt
+    fi
   fi
 }
 
-__clear_rprompt () {
-  RPROMPT=
+# at new prompt, set git segment, clear other segments
+__async_prompt_precmd () {
+  RPROMPT=$__GITPROMPT
+  unset __KUBEPROMPT
+  local -i fd
+  exec {fd} < <(__async_prompt.git-status)
+  __async_prompt_fds+=($fd)
+  zle -F $fd __async_prompt_set_git_segment
 }
 
-# TODO: Add responsive kubectl prompt segment
-# add this when we add additional prompt segments
-# __clear_tainted_rprompt () {
-#   [[ -n __rprompt_tainted ]] && RPROMPT=
-# }
+# on sending cmd, clear all segments except git
+__async_prompt_prexec () {
+  RPROMPT=$__GITPROMPT
+  unset __KUBEPROMPT
+}
 
-__set_git_rprompt () {
-  RPROMPT="$(<&$1)"
-  zle reset-prompt
-  zle -F $1
-  exec {1}<&-
-  unset __git_prompt_fd
+# reap outstanding fds
+__async_prompt_reap () {
+  [[ -v __async_prompt_fds ]] || return
+  local fd
+  for fd in $__async_prompt_fds; do
+    zle -F $fd
+    exec {fd}<&-
+  done
+  __async_prompt_fds=()
+}
+
+# on chpwd, clear git segment
+__async_prompt_chpwd () {
+  RPROMPT=
+  unset __GITPROMPT
+}
+
+__async_prompt_set_git_segment () {
+  __GITPROMPT="$(<&$1)"
+  __async_prompt_draw_rprompt $1
+}
+
+__async_prompt_set_kube_segment () {
+  __KUBEPROMPT="$(<&$1)"
+  __async_prompt_draw_rprompt $1
+}
+
+__async_prompt_draw_rprompt () {
+  local rprompt=( $__KUBEPROMPT $__GITPROMPT )
+  local new_RPROMPT=${(j. .)rprompt}
+  if [[ $RPROMPT != $new_RPROMPT ]]; then
+    RPROMPT=$new_RPROMPT
+    zle reset-prompt
+  fi
+  if [[ -n $1 ]]; then
+    zle -F $1
+    exec {1}<&-
+    __async_prompt_fds=(${__async_prompt_fds:#$1})
+  fi
 }
 
 __async_prompt.git-status () {
