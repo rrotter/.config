@@ -1,8 +1,9 @@
-containers/
-gh/hosts.yml
-glab-cli/config.yml
-glow/
-helm/
-iterm2/
-op/
-swiftpm/
+/containers/
+/exercism/
+/gh/hosts.yml
+/glab-cli/config.yml
+/glow/
+/helm/
+/iterm2/
+/op/
+/swiftpm/
