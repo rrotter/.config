@@ -14,10 +14,12 @@ darwin*)
     *) export HOMEBREW_PREFIX=/usr/local ;;
   esac
   [[ :$PATH: == *:$HOMEBREW_PREFIX/bin:$HOMEBREW_PREFIX/sbin:* ]] || PATH=$HOMEBREW_PREFIX/bin:$HOMEBREW_PREFIX/sbin:$PATH
+
+  # defaults, minus the n (Tcl) section
+  export MANSECT=1:8:2:3:3lua:4:5:6:7:9:l
 ;;
 linux*)
-  # Set proper time formats, at least for GNU Coreutils
-  # Don't set LC_TIME, en_GB is missing on most Debian installs
+  # Set proper time format for `ls`
   export TIME_STYLE="+%e %b  %Y"$'\n'"%e %b %H:%M"
   # Partial fix for horrible LC_COLLATE configs in glibc locales. This puts .dotfiles back at
   # the top, but makes sorting case sensitive. Proper fix would require a fully custom locale.
