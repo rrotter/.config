@@ -58,18 +58,25 @@ compdef -d diff glow # unhelpful completions
     darwin*)
       IGNORE+=(
         # unwanted binaries from apple
-        '*[[:alpha:]]5.<->(|.pl)|(md|sha)<->sum|ht(digest|passwd|txt2dbm)|ab|checkgid|logresolve|rotatelogs'
+        '*5.<->(|.pl)|(md|sha)<->sum|ht(digest|passwd|txt2dbm)|ab|checkgid|logresolve|rotatelogs|post*'
         'app(-sso|sleepd)|k(admin*|cc|dc*|destroy|get*|init|list*|passwd|rb*|tutil|switch|cditto|ext*|mutil)|mkext*'
         'appleh<->*|hi(|d)util|mcx*|pwd_mkdb|pwpolicy|sdef|sd[px]|tclsh*|tk(con|mib|pp)|serverinfo|wish*'
         'DeRez|DirectoryS*|GetF*|ResM*|Rez|SetF*|SplitF*|cups*|lp*|ppd*|weakpass_edit|update_*'
-        'j(ar*|ava*|cmd|con*|db|deps|hsdb|image|info|js|link|map|pack*|ps|runscript|shell|sta*)'
-        'orbd|*pack200|rmi*|serialver|tnameserv|(key|policy|server)tool|post*'
         # unwanted binaries from brew
         'luajit-2.*|idle3*|pydoc*|python3-*|wheel3*|2to3*|git2|zsh-5*'
       )
-      # unhash non-executable junk apple left in /usr/sbin, and .DS_Store just in case we have any in $path
-      unset 'commands[authserver]' 'commands[envvars]' 'commands[envvars-std]' 'commands[iRATBW.mlmodelc]' 'commands[.DS_Store]'
-
+      # unhash non-executable junk that should never have been in $PATH
+      noglob unset \
+        commands[authserver] commands[envvars] commands[envvars-std] commands[iRATBW.mlmodelc] \
+        commands[.DS_Store] \
+        commands[test-yaml] commands[test-yaml5.34]
+      # unhash java stubs
+      noglob unset commands[jar] commands[jarsigner] commands[java] commands[javac] commands[javadoc] commands[javap] \
+        commands[javaws] commands[jcmd] commands[jconsole] commands[jcontrol] commands[jdb] commands[jdeps] \
+        commands[jhsdb] commands[jimage] commands[jinfo] commands[jjs] commands[jlink] commands[jmap] commands[jpackage] \
+        commands[jps] commands[jrunscript] commands[jshell] commands[jstack] commands[jstat] commands[jstatd] \
+        commands[keytool] commands[orbd] commands[pack200] commands[policytool] commands[rmic] commands[rmid] \
+        commands[rmiregistry] commands[serialver] commands[servertool] commands[tnameserv] commands[unpack200]
       # disable _java: java isn't normally installed, _java breaks if it gets activated on binstubs
       _java () { _default }
     ;;
