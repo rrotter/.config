@@ -1,7 +1,20 @@
 ## compinit ##
 zstyle ':completion::complete:*' cache-path $XDG_CACHE_HOME/zsh/zcompcache
-[[ -d $XDG_CACHE_HOME/zsh ]] || mkdir -p -m 700 $XDG_CACHE_HOME/zsh
-autoload -Uz compinit && compinit -d $XDG_CACHE_HOME/zsh/zcompdump
+_comp_dumpfile=$XDG_CACHE_HOME/zsh/zcompdump
+
+# skip staleness check on dumpfile unless it's 20 hours old
+# run `rm $_comp_dumpfile` to force reload
+autoload -Uz compinit
+if [[ $_comp_dumpfile(#qNmh-20) ]]; then
+  compinit -C -d $_comp_dumpfile
+else
+  if [[ -f $_comp_dumpfile ]]; then
+    touch $_comp_dumpfile
+  elif ! [[ -d $_comp_dumpfile:h ]]; then
+    mkdir -p -m 700 $_comp_dumpfile:h
+  fi
+  compinit -d $_comp_dumpfile
+fi
 
 ## settings ##
 zstyle ':completion:*' special-dirs '..'

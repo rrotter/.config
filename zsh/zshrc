@@ -148,27 +148,7 @@ if (( $UID > 500 )); then
 
   ## source additional init scripts ##
   source ~/.config/zsh/prompt.zsh
-
-  # source remaining files when zle is idle
-  typeset -ga _zsh_asyncsource_files=( ~/.config/zsh/completion.zsh )
-  _zsh-asyncsource-schedule () {
-    local fd
-    exec {fd}</dev/null
-    zle -F $fd _zsh-asyncsource
-  }
-  _zsh-asyncsource () {
-    emulate -L zsh
-    zle -F $1
-    exec {1}>&-
-    while (( $#_zsh_asyncsource_files && !KEYS_QUEUED_COUNT && !PENDING )); do
-      source $_zsh_asyncsource_files[1]
-      shift _zsh_asyncsource_files
-    done
-    [[ -v _zsh_asyncsource_files[1] ]] && _zsh-asyncsource-schedule
-    return 0
-  }
-  zle -N _zsh-asyncsource
-  _zsh-asyncsource-schedule
+  source ~/.config/zsh/completion.zsh
 else
   PS1='%n@%m:%~ %# '
 fi
