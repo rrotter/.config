@@ -2,53 +2,86 @@
 #
 # which -vvv
 
-wat () {
-  local -A color=(ok '01;34' err '01;31' ln '35' ex '31')
-  local -a grep=(grep --color=auto -E)
+case $1 in
+-*h*|--help)
+  echo "$0 - which -vvv"
+  echo
+  echo "Usage: $0 [-m] name ..."
+  echo
+  echo "$0 is a wrapper for the 'type' command that prints more detailed output,"
+  echo "including executable type from 'file', and provenance details from a package"
+  echo "manager where available. Also recursively resolves simple aliases."
+  echo
+  echo "Supported flags have the same function as in the zsh 'type' and 'which'"
+  echo "builtin commands. See zsh help pages for more information."
+  echo  
+  return
+  ;;
+-*[wfsS]*)
+  # we can't parse the output of `type` with these flags, so just
+  # run `type` without any added features.
+  type $@
+  return $?
+  ;;
+esac
 
-  local WAT_INDENT=${WAT_INDENT+${WAT_INDENT}└─ }
-  local ret=0
-  local x line src target
-  local match mbegin mend MATCH BEGIN MEND # don't leak pattern match parameters
-  local -A seen
-  for x in $@; do
-    seen=()
-    for line in "${(@f)$(type -a ${x})}"; do
-      ret=$(( $ret | $? ))
-      if [[ $line =~ "^${x} is /" ]]; then
-        # commands
-        target=${line##* }
-        src=$target:A
-        [[ -v seen[$src] ]] && continue || seen[$src]=
-        if [[ -L $target ]]; then
-          # symlink commands
-          echo "$WAT_INDENT$line -> $src" | GREP_COLOR="$color[ln]" GREP_COLORS="mt=$color[ln]" $grep '/[^ ]+ '
-        else
-          # other commands
-          echo $WAT_INDENT$line | GREP_COLOR="$color[ex]" GREP_COLORS="mt=$color[ex]" $grep '/.*'
-        fi
-        WAT_INDENT=${WAT_INDENT:s/└─ /   /}
-        # print package manager info
-        binfo $src
-        # print file type info
-        echo "$WAT_INDENT  $(file -b "${src}" | head -1 | sed -E 's/( with . archi.*|, version.*)$//')"
-      elif [[ $line =~ "shell (function|builtin)|alias|reserved word" ]]; then
-        # anything except commands
-        echo $WAT_INDENT$line | GREP_COLOR="$color[ok]" GREP_COLORS="mt=$color[ok]" $grep 'shell (function|builtin)|alias|reserved word'
-        WAT_INDENT=${WAT_INDENT:s/└─ /   /}
-        if [[ $line =~ "^${x} is an alias for [0-9A-Za-z_\-]+$" ]]; then
-          # recurse on simple aliases (alias w/ no args)
-          $0 ${line##* }
-        fi
-      elif [[ $line =~ "not found" ]]; then
-        echo $WAT_INDENT$line | GREP_COLOR="$color[err]" GREP_COLORS="mt=$color[err]" $grep 'not found'
+# control indentation
+local INDENT=${WAT_INDENT+${WAT_INDENT}└─ }
+local WAT_INDENT=${INDENT//?/ }
+# color settings
+local -A c=(ok '01;34' err '01;31' ln '35' ex '31')
+if [[ -n $NO_COLOR && -$parameters[NO_COLOR]- = *-export-* ]]; then
+  c=(ok '01;39' err '01;39' ln '0' ex '0')
+fi
+local bin cmd
+local MATCH MBEGIN MEND
+local -a lines
+lines=( "${(@f)$(type -a $@)}" )
+local ret=$?
+for line in $lines; do
+  case $line in
+  *" an alias "*)
+    echo -e ${INDENT}${line/ an alias / an $'\e'[$c[ok]malias$'\e'[0m }
+    if [[ $line =~ "^[-_[:alnum:]]+ is an alias for [-_[:alnum:]]+$" ]]; then
+      # recurse on simple aliases (alias w/ no args)
+      $0 ${line##* }
+    fi
+    ;;
+  *" global alias "*)
+    echo -e ${INDENT}${line/ global alias / $'\e'[$c[ok]mglobal alias$'\e'[0m }
+    ;;
+  *" shell function"*)
+    echo -e ${INDENT}${line/ shell function/ $'\e'[$c[ok]mshell function$'\e'[0m}
+    ;;
+  *" shell builtin")
+    echo -e ${INDENT}${line/ shell builtin/ $'\e'[$c[ok]mshell builtin$'\e'[0m}
+    ;;
+  *" reserved word")
+    echo -e ${INDENT}${line/ reserved word/ $'\e'[$c[ok]mreserved word$'\e'[0m }
+    ;;
+  *" not found")
+    echo -e ${INDENT}${line/ not found/ $'\e'[$c[err]mnot found$'\e'[0m}
+    ;;
+  *)
+    # we've handled everything else, so this is probably a command
+    cmd=${line##* }
+    # should probably always be true
+    if [[ -x $cmd ]]; then
+      if [[ -L $cmd ]]; then
+        bin=$cmd:A
+        echo -e ${INDENT}"${line% $cmd} \e[$c[ln]m$cmd\e[0m -> \e[$c[ex]m$bin\e[0m"
       else
-        ret=1
-        echo "$0: failed. No idea how we got here. Please file a bug report!" >&2
-        echo $WAT_INDENT$line
+        echo -e ${INDENT}"${line% $cmd} \e[$c[ex]m$cmd\e[0m"
       fi
-    done
-  done
+      binfo $cmd
+      # check if file is readable; some systems disable read bit on setuid bins
+      [[ -r $cmd ]] && \
+        echo "$WAT_INDENT  $(file -b "${cmd}" | head -1 | sed -E 's/( with . archi.*|, version.*)$//')"
+    else
+      # idk how we got here, but we'll just print w/o any highlighting
+      echo -E $WAT_INDENT$line
+    fi
+  esac
+done
 
-  return $ret
-}
+return $ret

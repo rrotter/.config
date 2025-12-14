@@ -1,4 +1,4 @@
 #compdef wat
 
-local service="which"
+local service="type"
 _which $@
