@@ -25,12 +25,12 @@ PS1+='%(?..%(130?.%F{yellow}.%(141?.%F{cyan}.%(146?.%F{blue}.%F{red}))))%#%f '
 PS1=$'%{\e]133;A\a%}'${PS1}$'%{\e]133;B;\a%}'
 PS2=$'%{\e]133;A;k=s\a%}'${PS2}$'%{\e]133;B;\a%}'
 
-__terminal_integration.hook.preexec() {
+__term.hook.preexec() {
   print -n '\e]133;C\a'
   # set title
   print -rn $'\e]2;'"${(V)1}"$'\a'
 }
-__terminal_integration.hook.precmd() {
+__term.hook.precmd() {
   print -n '\e]133;D\a'
   # report cwd
   print -n '\e]7;kitty-shell-cwd://'"$HOST""$PWD"'\a'
@@ -40,13 +40,12 @@ __terminal_integration.hook.precmd() {
 
 ## install hooks ##
 typeset -aU chpwd_functions=( __async_prompt.hook.chpwd )
-typeset -aU precmd_functions=( __async_prompt.reap __async_prompt.hook.precmd __terminal_integration.hook.precmd )
-typeset -aU preexec_functions=( __async_prompt.reap __async_prompt.hook.prexec __terminal_integration.hook.preexec )
+typeset -aU precmd_functions=( __async_prompt.reap __async_prompt.hook.precmd __term.hook.precmd $precmd_functions )
+typeset -aU preexec_functions=( __async_prompt.reap __async_prompt.hook.prexec __term.hook.preexec $preexec_functions )
 autoload -Uz add-zle-hook-widget
 add-zle-hook-widget zle-line-pre-redraw __async_prompt.hook.zle_redraw
 
 ## async prompt segment functions ##
-# track outstanding fds
 typeset -gaU __async_prompt_fds
 
 # on command line redraw, check if we need to render a segment for current command
@@ -72,7 +71,7 @@ __async_prompt.hook.precmd () {
   RPROMPT=$__GITPROMPT
   unset __KUBEPROMPT
   local -i fd
-  exec {fd} < <(__async_prompt.git-status)
+  exec {fd} < <(__prompt.git-status)
   __async_prompt_fds+=($fd)
   zle -F $fd __async_prompt.callback.set_git_segment
 }
@@ -124,7 +123,7 @@ __async_prompt.draw_rprompt () {
   fi
 }
 
-__async_prompt.git-status () {
+__prompt.git-status () {
   emulate -L zsh
 
   local -i fd
