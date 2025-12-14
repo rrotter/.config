@@ -2,6 +2,8 @@
 #
 # which -vvv
 
+emulate -L zsh -o extendedglob
+
 case $1 in
 -*h*|--help)
   echo "$0 - which -vvv"
@@ -34,7 +36,6 @@ if [[ -n $NO_COLOR && -$parameters[NO_COLOR]- = *-export-* ]]; then
   c=(ok '01;39' err '01;39' ln '0' ex '0')
 fi
 local bin cmd
-local MATCH MBEGIN MEND
 local -a lines
 lines=( "${(@f)$(type -a $@)}" )
 local ret=$?
@@ -42,9 +43,16 @@ for line in $lines; do
   case $line in
   *" an alias "*)
     echo -e ${INDENT}${line/ an alias / an $'\e'[$c[ok]malias$'\e'[0m }
-    if [[ $line =~ "^[-_[:alnum:]]+ is an alias for [-_[:alnum:]]+$" ]]; then
-      # recurse on simple aliases (alias w/ no args)
-      $0 ${line##* }
+    if [[ $line = [-_[:alnum:]]##' is an alias for '[-_[:alnum:]]## ]]; then
+      cmd=${line##* }
+      if [[ :$NORECURSE: != *:$cmd:* ]]; then
+        # recurse on simple aliases (alias w/ no args)
+        local tmpNORECURSE=$NORECURSE
+        local NORECURSE="${cmd}${NORECURSE:+:${NORECURSE}}"
+        $0 -- $cmd
+        NORECURSE=$tmpNORECURSE
+        unset tmpNORECURSE
+      fi
     fi
     ;;
   *" global alias "*)
