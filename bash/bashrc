@@ -4,8 +4,16 @@ source ~/.zshenv
 unalias setopt
 
 # macOS: stop yelling about bash
-[[ $OSTYPE = darwin* && $BASH_VERSION = 3.* ]] \
+[[ $OSTYPE = darwin* && $BASH_VERSINFO = 3 ]] \
   && export BASH_SILENCE_DEPRECATION_WARNING=1
+
+# autocd
+if (( BASH_VERSINFO >= 4 )); then
+  shopt -s autocd
+  exec {BASH_XTRACEFD}>/dev/null
+else
+  alias ..='cd ..'
+fi
 
 # interactive shells only
 if [[ $- == *i* ]]; then
@@ -22,7 +30,7 @@ if [[ $- == *i* ]]; then
 
   ## completion ##
   if [[ -r "${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh" ]]; then
-    # silince useless errors on bash 3
+    # silence useless errors on bash 3
     source "${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh" 2> /dev/null
   fi
   complete -C tk tk
@@ -34,7 +42,6 @@ if [[ $- == *i* ]]; then
 
   ## aliases ##
   alias -- -='cd -'
-  alias ..='cd ..'
   alias g=git
   alias ls='ls -F --color=auto'
   alias l='ls' la='ls -A' l1='\ls -1' ll='ls -lh' lla='ls -lAh'
