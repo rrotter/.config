@@ -35,7 +35,7 @@ local -A c=(ok '01;34' err '01;31' ln '35' ex '31')
 if [[ -n $NO_COLOR && -$parameters[NO_COLOR]- = *-export-* ]]; then
   c=(ok '01;39' err '01;39' ln '0' ex '0')
 fi
-local bin cmd
+local cmd
 local -a lines
 lines=( "${(@f)$(type -a $@)}" )
 local ret=$?
@@ -76,15 +76,14 @@ for line in $lines; do
     # should probably always be true
     if [[ -x $cmd ]]; then
       if [[ -L $cmd ]]; then
-        bin=$cmd:A
-        echo -e ${INDENT}"${line% $cmd} \e[$c[ln]m$cmd\e[0m -> \e[$c[ex]m$bin\e[0m"
+        echo -e ${INDENT}"${line% $cmd} \e[$c[ln]m$cmd\e[0m -> \e[$c[ex]m$cmd:A\e[0m"
       else
         echo -e ${INDENT}"${line% $cmd} \e[$c[ex]m$cmd\e[0m"
       fi
       binfo $cmd
       # check if file is readable; some systems disable read bit on setuid bins
       [[ -r $cmd ]] && \
-        echo "$WAT_INDENT  $(file -b "${cmd}" | head -1 | sed -E 's/( with . archi.*|, version.*)$//')"
+        echo "$WAT_INDENT  $(file -b "${cmd:A}" | head -1 | sed -E 's/( with . archi.*|, version.*)$//')"
     else
       # idk how we got here, but we'll just print w/o any highlighting
       echo -E $WAT_INDENT$line
