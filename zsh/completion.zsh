@@ -61,6 +61,7 @@ compdef -d diff glow # unhelpful completions
   # commands and parameters that we never want suggested
   # be _very_ careful to avoid false positives so we don't break AUTO_CD, esp. on suffix matches
   local IGNORE=(
+    'git2|command_not_found_handler|perl5.*'
     '_*|which-command|aliases|hist(char|word)s|zsh_sched*|backward-*-*|(up|down)-line-or-beginning-search|zle-*|bashbug'
     'aws_completer|(git|kubectl|podman)[-_]*|kubecolor|bundler|less(echo|key)|sha(1|224)(|sum)|p(ython|ip)3.*|pod(2*|checker)'
     'comp(add|arguments|call|ctl|describe|files|groups|quote|set|tags|try|values|audit|def|dump|gen|init|install|lete|p*funcs)'
@@ -70,12 +71,13 @@ compdef -d diff glow # unhelpful completions
     darwin*)
       IGNORE+=(
         # unwanted binaries from apple
-        '*[2a-y][3a-y]5.<32-99>(|.pl)|(md|sha)<->sum|ht(digest|passwd|txt2dbm)|ab|checkgid|logresolve|rotatelogs|post???(|?|??)'
+        'config_data|pp|*[2a-y][3a-y]5.<32-99>(|.pl)'
+        '(md|sha)<->sum|ht(digest|passwd|txt2dbm)|ab|checkgid|logresolve|rotatelogs|post???(|?|??)'
         'app(-sso|sleepd)|k(admin*|cc|dcsetup|destroy|getcred|init|list*|passwd|rb*|tutil|switch|cditto|ext*|mutil)|mkext*'
         'appleh1?cam*|hi(|d)util|mcx*|pwd_mkdb|pwpolicy|sdef|sd[px]|tclsh*|tk(con|mib|pp)|serverinfo|wish*'
-        '(|De)Rez|DirectoryS*|[GS]etFi*|ResMe*|SplitFo*|cups*|lp*|ppd*|weakpass_edit|update_[dm]*'
+        '(|De)Rez|DirectoryS*|[GS]etFi*|ResMe*|SplitForks|cups*|lp*|ppd*|weakpass_edit|update_[dm]*'
         # unwanted binaries from brew
-        'luajit-2.*|idle3*|pydoc*|python3-*|wheel3*|2to3*|git2|zsh-5*'
+        'luajit-2.*|idle3*|pydoc*|python3-*|wheel3*|2to3*|zsh-5*'
       )
       # unhash non-executable junk that should never have been in $PATH
       noglob unset \
@@ -101,4 +103,4 @@ compdef -d diff glow # unhelpful completions
 }
 
 # don't autocomplete subcommands for setting up autocomplete 🤦
-zstyle ':completion::complete:(gh|glab|helm|k9s|kind|kubec(tl|olor)|op|trivy):*:*' ignored-patterns 'completion'
+zstyle ':completion::complete:*:*:*' ignored-patterns 'completion'
