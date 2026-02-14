@@ -74,5 +74,9 @@ if [[ $cmd =~ ^l[l1] ]]; then
   fi
 fi
 
-print >&2 "zsh: command not found: $0"
+if (( $#functrace == 1 )) && [[ $functrace[1] = -zsh:* ]]; then
+  print -- "zsh: command not found: $0" >&2
+else
+  print -- "${${functrace[1]}%:*}: command not found: $0" >&2
+fi
 return 127
