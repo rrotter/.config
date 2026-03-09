@@ -1,4 +1,6 @@
-/containers/
+!/containers/
+/containers/*
+!/containers/containers.conf
 /exercism/
 /gh/hosts.yml
 /glab-cli/config.yml
