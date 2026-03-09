@@ -8,6 +8,7 @@ tap "homebrew/core"
 tap "rattatap/tap"
 
 # cli tools
+brew "actionlint"
 brew "rattatap/tap/bind-dnstools"; brew "libidn2", link: false
 brew "rattatap/tap/curl-completion"
 brew "dos2unix"
@@ -15,12 +16,12 @@ brew "duti" # for setting mac file handlers
 brew "fastfetch"
 brew "fd"
 brew "fzf"
-brew "git-delta"
+brew "git-delta"; brew "libgit2"
 brew "glow" # markdown
 brew "hyperfine"
 brew "jq"
 brew "less"
-brew "neovim"; brew "luv"; brew "tree-sitter"
+brew "neovim"; brew "luv"
 brew "ripgrep"
 brew "tlrc" # tldr
 brew "tmux"
@@ -35,7 +36,7 @@ brew "zstd"
 # pgp
 brew "pgpdump"
 brew "sequoia-sq"
-brew "sequoia-chameleon-gnupg"
+brew "sequoia-chameleon-gnupg"; brew "rattatap/tap/gpg-from-sq"
 
 # sysadmin
 brew "awscli"; brew "saml2aws"
@@ -80,6 +81,7 @@ unless Hardware::CPU.virtualized?
   cask "discord"
   cask "firefox"
   cask "freecad"
+  cask "macdown-3000"
   cask "omnidisksweeper"
   cask "pacifist"
   cask "skim"
@@ -93,12 +95,12 @@ unless Hardware::CPU.virtualized?
   mas "Wipr", id: 1662217862
 
   # misc tools
-  mas "Mactracker", id: 430255202
+  cask "mactracker"
   brew "ykman" # yubikey
 
   # vm
   brew "kind"
-  %w[podman podman-compose].each{|x| brew x}
+  brew "podman"; brew "podman-compose"
   cask "utm"
 
   # annoyances

@@ -62,7 +62,6 @@
 	prune = true
 [gpg]
 	format = ssh
-	program = gpg-sq
 [gpg "ssh"]
 	allowedSignersFile = ~/.private/git/allowedSigners
 [grep]
