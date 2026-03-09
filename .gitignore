@@ -2,6 +2,7 @@
 /containers/*
 !/containers/containers.conf
 /exercism/
+/flipperdevices.com/
 /gh/hosts.yml
 /glab-cli/config.yml
 /glow/
