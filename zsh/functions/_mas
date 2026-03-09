@@ -1,0 +1,53 @@
+#compdef mas
+
+local context curcontext state state_descr line
+
+_arguments \
+  ':command:->command' \
+  ':opt:->opt'
+
+case $state in
+command)
+  local -a cmds=(
+    config:"Output mas config & related system info"
+    {purchase,get}:"Get & install free apps from the App Store"
+    home:"Open App Store app pages in the default web browser"
+    install:"Install previously gotten apps from the App Store"
+    list:"List apps installed from the App Store"
+    {lookup,info}:"Output app information from the App Store"
+    lucky:"Install the first app returned from searching the App Store"
+    open:"Open app page in 'App Store.app'"
+    outdated:"List pending app updates from the App Store"
+    reset:"Reset App Store processes & clear cached App Store downloads"
+    search:"Search for apps in the App Store"
+    {vendor,seller}:"Open apps' seller pages in the default web browser"
+    signout:"Sign out of the App Store"
+    uninstall:"Uninstall apps installed from the App Store"
+    {update,upgrade}:"Update outdated apps installed from the App Store"
+    version:"Output version number"
+    help:"Show help information"
+  )
+  _describe -t mas-commands 'mas commands' cmds
+  ;;
+opt)
+  case $words[2] in
+  help)
+    local -a topics=( config get home install list lookup lucky open outdated reset search seller signout uninstall update version )
+    _describe -t all-commands 'all commands' topics
+    ;;
+  update|upgrade)
+    local -a apps
+    while IFS= read -r line; do
+      apps+=( "${${${${line%\(*}%%[[:space:]]#}##[[:space:]]#}/  /:}" )
+    done < <(mas outdated)
+    _describe -t app 'app' apps
+    ;;
+  uninstall)
+    local -a apps
+    while IFS= read -r line; do
+      apps+=( "${${${${line%\(*}%%[[:space:]]#}##[[:space:]]#}/  /:}" )
+    done < <(mas list)
+    _describe -t app 'app' apps
+    ;;
+  esac
+esac
