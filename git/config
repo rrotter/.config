@@ -13,10 +13,9 @@
 	l = ls
 	ll = ls -l
 	llr = ls -lr
-	lo = log --pretty=ol-terse -20 # a short log
+	lo = log --pretty=ol -20 # a short log
 	logbranch = log origin/HEAD..
 	logsig = log --show-signature
-	lol = log --pretty=ol -20 # a (not as) short log
 	lr = ls -r
 	lrl = ls -lr
 	ls = ls-tree --abbrev HEAD
@@ -75,7 +74,6 @@
 	file = ~/.private/git/mailmap
 [pretty]
 	ol = %C(auto)%h %as %s <%aE>%d
-	ol-terse = %C(auto)%h %as %s <%aE>
 [push]
 	autoSetupRemote = true
 [worktree]
