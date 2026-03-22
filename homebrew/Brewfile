@@ -1,6 +1,15 @@
 # prevent silent use of root access
 system "sudo -k"
 
+# helpers
+def brew_each_version(formula_name)
+  brew formula_name
+  Formulary.factory(formula_name)
+    .versioned_formulae
+    .select{|formula| !(formula.disabled? || formula.deprecated?)}
+    .each{|formula| brew formula.name}
+end
+
 # install official taps for formula development
 tap "homebrew/cask"
 tap "homebrew/core"
@@ -10,7 +19,7 @@ tap "rattatap/tap"
 # cli tools
 brew "actionlint"
 brew "rattatap/tap/bind-dnstools"; brew "libidn2", link: false
-brew "rattatap/tap/curl-completion"
+brew "curl", link: true
 brew "dos2unix"
 brew "duti" # for setting mac file handlers
 brew "fastfetch"
@@ -19,9 +28,10 @@ brew "fzf"
 brew "git-delta"; brew "libgit2"
 brew "glow" # markdown
 brew "hyperfine"
+brew "iproute2mac"
 brew "jq"
 brew "less"
-brew "neovim"; brew "luv"
+brew "neovim"; brew "tree-sitter"; brew "luv"
 brew "ripgrep"
 brew "tlrc" # tldr
 brew "tmux"
@@ -40,7 +50,6 @@ brew "sequoia-chameleon-gnupg"; brew "rattatap/tap/gpg-from-sq"
 
 # sysadmin
 brew "awscli"; brew "saml2aws"
-brew "cloudflare-cli4"
 brew "rattatap/tap/fwknop-client"
 brew "opentofu"
 brew "sslscan"
@@ -67,7 +76,7 @@ cask "hex-fiend"
 cask "iterm2"
 cask "ghostty", args: { no_bin: true }
 brew "python"
-brew "ruby", link: true
+brew_each_version "ruby"
 
 unless Hardware::CPU.virtualized?
   brew "mas"
@@ -81,6 +90,7 @@ unless Hardware::CPU.virtualized?
   cask "discord"
   cask "firefox"
   cask "freecad"
+  cask "kicad"
   cask "macdown-3000"
   cask "omnidisksweeper"
   cask "pacifist"
@@ -88,6 +98,7 @@ unless Hardware::CPU.virtualized?
   cask "slack"
   cask "swiftbar" # scripts in menubar
   cask "tower", args: { no_bin: true }
+  cask "xquartz"
   mas "Dato", id: 1470584107
   mas "Deliveries", id: 290986013
   mas "Numbers", id: 409203825
@@ -105,11 +116,6 @@ unless Hardware::CPU.virtualized?
 
   # annoyances
   cask "notunes"
-
-  # Install these casks manually. They require sudo, which we normally don't
-  # want to allow.
-  cask "kicad" if Cask::Caskroom.casks.find{|x| x.to_s == "kicad"}
-  cask "xquartz" if Cask::Caskroom.casks.find{|x| x.to_s == "xquartz"}
 end
 
 # common dependencies
