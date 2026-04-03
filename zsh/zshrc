@@ -36,6 +36,13 @@ zle-insert-dot () {
 }
 zle -N zle-insert-dot
 bindkey . zle-insert-dot
+bindkey -M isearch . self-insert
+
+# delete trailing /.. if it looks like zle-insert-dot wrote it
+backward-delete-char () {
+  [[ $LBUFFER = *../.. ]] && LBUFFER=${LBUFFER%/..} || zle .backward-delete-char
+}
+zle -N backward-delete-char
 
 # better shell history navigation
 autoload -Uz up-line-or-beginning-search
@@ -45,18 +52,13 @@ zle -N down-line-or-beginning-search
 bindkey "^[[A" up-line-or-beginning-search # Up
 bindkey "^[[B" down-line-or-beginning-search # Down
 
-# delete trailing /.. if it looks like zle-insert-dot wrote it
-backward-delete-char () {
-  [[ $LBUFFER = *../.. ]] && LBUFFER=${LBUFFER%/..} || zle .backward-delete-char
-}
-zle -N backward-delete-char
-
 ## zsh shell options ##
 setopt AUTO_CD COMBINING_CHARS EXTENDED_GLOB INTERACTIVE_COMMENTS NO_CASE_GLOB
 cdpath=(~ ~/Documents)
 disable log r - # useless zsh builtins
 TIMEFMT=$'\t%*E real\t%*U user\t%*S sys\t(%P cpu)'
 REPORTTIME=10
+PROMPT_EOL_MARK='%F{red}█'
 
 ## OS specific ##
 case $OSTYPE in
@@ -67,9 +69,8 @@ darwin*)
 ;;
 esac
 
+## print hyperlinks for local files ##
 if [[ ! -v SSH_CLIENT ]]; then
-  # Debian versions of these utils are too old to support hyperlinks,
-  # and they are unlikely to be useful on remote hosts anyway.
   [[ -v commands[fd]   ]] && alias fd='fd --hyperlink'
   [[ -v commands[rg]   ]] && alias rg="rg --hyperlink-format='file://{host}{path}'"
   [[ -v commands[tree] ]] && alias tree='tree -F --hyperlink'
@@ -78,7 +79,7 @@ fi
 ## editor ##
 if [[ -v commands[nvim] ]]; then
   export EDITOR=nvim
-  alias vi=nvim vim=nvim
+  alias {vi,vim}=nvim
 elif [[ -v commands[vim] ]]; then
   export EDITOR=vim
 else
@@ -92,21 +93,24 @@ alias help=run-help which-command='type -a'
 
 ## misc. aliases ##
 # shortening
-alias 64=base64 p='print -l --' path='print -l $path' fpath='print -l $fpath' -='cd -'
+alias p='print -l --' path='print -l $path' fpath='print -l $fpath' -='cd -'
 [[ -v commands[k9s] ]] && alias 9=k9s
-[[ -v commands[tofu] ]] && alias tf=tofu
 alias g=git gg='git grep' remote='git remote --verbose'
 # alias git commands with barewords
 () {
   local cmd; for cmd (
-    add blame br branch cherry-pick co com ci commit di dis fetch fixup
-    lo lol merge pull push rebase sho show st stash web wt worktree
+    add blame br{,anch} cherry-pick co com {ci,commit} di dis fetch fixup
+    lo merge pull push rebase sho show st{,ash} web {wt,worktree}
   ) alias $cmd="git ${cmd}"
 }
+[[ -v commands[delta] ]] && alias delta='delta --hyperlinks'
 
 # decoration
-[[ -v commands[kubectl] ]] && alias k=kubectl
-[[ -v commands[kubecolor] ]] && alias k=kubecolor kubectl=kubecolor
+if [[ -v commands[kubecolor] ]]; then
+  alias {k,kubectl}=kubecolor
+elif [[ -v commands[kubectl] ]]; then
+  alias k=kubectl
+fi
 alias egrep='egrep --color=auto' fgrep='fgrep --color=auto' grep='grep --color=auto' rgrep='grep -r'
 alias ls='ls -F --color=auto' l='ls' la='ls -A' l1='\ls -1' ll='ls -lh' lla='ls -lAh'
 [[ -v commands[ip] ]] && alias ip='ip -color=auto'
@@ -122,7 +126,7 @@ if (( $UID > 500 )); then
 
   # zsh global aliases
   alias -g C='| wc -l'
-  [[ -v commands[delta] ]] && alias -g D='| delta --hyperlinks'
+  [[ -v commands[delta] ]] && alias -g D='| delta'
   alias -g G='|& grep --' I='|& grep -i --' V='|& grep -v --'
   alias -g L='|& less -+F'
   alias -g S='| sort' U='| uniq'
