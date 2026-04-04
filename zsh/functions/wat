@@ -58,6 +58,11 @@ for line in $lines; do
   *" global alias "*)
     echo -e ${INDENT}${line/ global alias / $'\e'[$c[ok]mglobal alias$'\e'[0m }
     ;;
+  *" shell function from "*)
+    cmd=${line##* shell function from }
+    echo -e ${INDENT}${line/ shell function/ $'\e'[$c[ok]mshell function$'\e'[0m}
+    binfo $cmd
+    ;;
   *" shell function"*)
     echo -e ${INDENT}${line/ shell function/ $'\e'[$c[ok]mshell function$'\e'[0m}
     ;;
