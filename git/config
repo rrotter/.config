@@ -73,7 +73,7 @@
 [mailmap]
 	file = ~/.private/git/mailmap
 [pretty]
-	ol = %C(auto)%h %as %s <%aE>%d
+	ol = %C(auto)%h %as %s %C(dim)%aE%C(reset)%C(auto)%d
 [push]
 	autoSetupRemote = true
 [worktree]
