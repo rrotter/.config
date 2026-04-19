@@ -99,8 +99,8 @@ alias g=git gg='git grep' remote='git remote --verbose'
 # alias git commands with barewords
 () {
   local cmd; for cmd (
-    add blame br{,anch} cherry-pick co com {ci,commit} di dis fetch fixup
-    lo merge pull push rebase sho show st{,ash} web {wt,worktree}
+    add blame br{,anch} cherry-pick co com {ci,commit} di dis fetch fixup lfs
+    lo merge pull push rebase sho show st{,ash} submodule tag web {wt,worktree}
   ) alias $cmd="git ${cmd}"
 }
 [[ -v commands[delta] ]] && alias delta='delta --hyperlinks'
