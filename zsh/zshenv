@@ -8,6 +8,9 @@ darwin*)
   # proper time/date formats
   export LC_TIME=en_GB.UTF-8
 
+  # hack to fix Terminal.app setting wrong PATH
+  [[ $PATH == /usr/bin:/bin ]] && PATH=/usr/bin:/bin:/usr/sbin:/sbin
+
   # homebrew setup
   case ${CPUTYPE-$MACHTYPE} in
     arm*) export HOMEBREW_PREFIX=/opt/homebrew ;;
