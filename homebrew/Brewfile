@@ -89,8 +89,6 @@ unless Hardware::CPU.virtualized?
   cask "betterdisplay"
   cask "discord"
   cask "firefox"
-  cask "freecad"
-  cask "kicad"
   cask "macdown-3000"
   cask "omnidisksweeper"
   cask "pacifist"
