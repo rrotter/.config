@@ -19,17 +19,18 @@ and server names. The rest of this repo is easily usable without these details.
 # clone to ~/.config
 cd ~
 git clone https://github.com/rrotter/.config
+# clone ~/.private as well
+git clone <REDACTED>
 
 # run the idempotent init script to finish setup
 # run it again any time to make sure everything is still correct!
-.config/scripts/init.sh
+.config/init.sh
 ```
 
-#### clone `.private` ####
-List of files in my `~/.private/` repo:
+#### List of files in my `~/.private/` repo ####
 
 ```
-~/.private/scripts/init.sh # setup script
+~/.private/init.sh # setup script
 ~/.private/aws/config # configure aws profiles and regions
 ~/.private/git/config # user.name, user.email, user.signingkey, commit.gpgsign
 ~/.private/git/allowedSigners # list of ssh keys I trust to sign git commits
