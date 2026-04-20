@@ -1,5 +1,15 @@
 # .config - rrotter's public dotfiles #
 
+WIP
+
+```
+curl -OL https://raw.githubusercontent.com/rrotter/.config/refs/heads/macos/macos/10_language_and_display.zsh
+chmod +x 10_language_and_display.zsh
+./10_language_and_display.zsh
+```
+
+---
+
 zsh, git, ssh, homebrew, kubectl, and other configuration
 
 This opinionated repo expects nearly all config to live in `~/.config`. That's why even scripts
