@@ -13,9 +13,9 @@ local bin=$1:A
 local mgr pkg ver
 
 local HOMEBREW_PREFIX=${HOMEBREW_PREFIX-${commands[brew]+${commands[brew]:h:h}}}
-local HOMEBREW_CELLAR=${HOMEBREW_CELLAR-${HOMEBREW_PREFIX}/Cellar}
+local HOMEBREW_CELLAR=${HOMEBREW_CELLAR-${HOMEBREW_PREFIX:+$HOMEBREW_PREFIX/Cellar}}
 
-if [[ -v HOMEBREW_CELLAR && $bin = $HOMEBREW_CELLAR/* ]]; then
+if [[ -n $HOMEBREW_CELLAR && $bin = $HOMEBREW_CELLAR/* ]]; then
   local parts=(${(@s:/:)${bin#$HOMEBREW_CELLAR/}})
   mgr=homebrew
   pkg=$parts[1]
