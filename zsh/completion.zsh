@@ -48,6 +48,10 @@ complete -C tk tk
 complete -C tofu tofu
 complete -C terraform terraform
 
+## replace bad completions where better option available ##
+_comps[xh]=${_comps[http]-$_comps[xh]}
+_comps[xhs]=$_comps[xh]
+
 ## suppress bad completions ##
 compdef -d diff glow # unhelpful completions
 [[ -v commands[mdir] ]] || _mtools () { _default } # don't print errors when I fat-finger `mkdir` as `mdir`
