@@ -1,0 +1,5 @@
+#!/bin/sh
+
+[ $# -lt 2 ] && printf -- "--client\tShow client version only (no server required).\n"
+# disable filename completion
+printf ":4\n"
