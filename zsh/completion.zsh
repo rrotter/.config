@@ -47,11 +47,6 @@ complete -C ${commands[aws_completer]:-/usr/libexec/aws_completer} aws
 complete -C tk tk
 complete -C tofu tofu
 complete -C terraform terraform
-# source completions that are missing from filesystem
-if [[ $OSTYPE == linux* ]]; then
-  [[ -v commands[gh]      ]] && [[ ! -v functions[_gh]      ]] && source <(gh      completion -s zsh)
-  [[ -v commands[kubectl] ]] && [[ ! -v functions[_kubectl] ]] && source <(kubectl completion    zsh)
-fi
 
 ## suppress bad completions ##
 compdef -d diff glow # unhelpful completions
