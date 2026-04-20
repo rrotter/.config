@@ -71,13 +71,13 @@ compdef -d diff glow # unhelpful completions
     darwin*)
       IGNORE+=(
         # unwanted binaries from apple
-        'config_data|pp|*[2a-y][3a-y]5.<32-99>(|.pl)'
-        '(md|sha)<->sum|ht(digest|passwd|txt2dbm)|ab|checkgid|logresolve|rotatelogs|post???(|?|??)'
+        'config_data|htmltree|pp|*[2a-y][3a-y]5.<32-99>(|.pl)'
+        '(md|sha)<->sum|apache*|ab|checkgid|ht(tpd*|cache*|digest|passwd|(|txt2)dbm)|logresolve|rotatelogs|post???(|?|??)'
         'app(-sso|sleepd)|k(admin*|cc|dcsetup|destroy|getcred|init|list*|passwd|rb*|tutil|switch|cditto|ext*|mutil)|mkext*'
         'appleh1?cam*|hi(|d)util|mcx*|pwd_mkdb|pwpolicy|sdef|sd[px]|tclsh*|tk(con|mib|pp)|serverinfo|wish*'
         '(|De)Rez|DirectoryS*|[GS]etFi*|ResMe*|SplitForks|cups*|lp*|ppd*|weakpass_edit|update_[dm]*'
         # unwanted binaries from brew
-        'luajit-2.*|idle3*|pydoc*|python3-*|wheel3*|2to3*|zsh-5*'
+        'luajit-2.*|idle3*|pydoc*|python3-*|wheel3*|2to3*|zsh-5*|blackd|terramate-ls'
       )
       # unhash non-executable junk that should never have been in $PATH
       noglob unset \
