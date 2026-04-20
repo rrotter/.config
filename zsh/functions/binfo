@@ -10,7 +10,7 @@ fi
 
 local WAT_INDENT=${WAT_INDENT+$WAT_INDENT  }
 local bin=$1:A
-local mgr pkg ver
+local mgr pkg ver git_path git_repo git_ver
 
 local HOMEBREW_PREFIX=${HOMEBREW_PREFIX-${commands[brew]+${commands[brew]:h:h}}}
 local HOMEBREW_CELLAR=${HOMEBREW_CELLAR-${HOMEBREW_PREFIX}/Cellar}
@@ -37,6 +37,20 @@ elif [[ -v commands[dpkg] && -r /var/lib/dpkg/ ]]; then
   [[ -n $pkg && -n $ver ]] && mgr=dpkg
 fi
 
+# as a last resort, check if our file owned by a git repo
+if [[ -z $mgr ]]; then
+  if git -C $bin:h rev-parse --is-inside-work-tree &>/dev/null; then
+    git_path=$(git -C $bin:h ls-files --full-name $bin)
+    if [[ -n $git_path ]]; then
+      mgr=git
+      git_repo=$(git -C $bin:h rev-parse --show-toplevel)
+      git_repo=${git_repo/#${HOME}\//\~\/}
+      git_ver=$(git -C $bin:h describe --tags --dirty --always)
+      pkg="$git_repo@$git_ver/$git_path"
+    fi
+  fi
+fi
+
 if [[ -n $mgr ]]; then
-  print "$WAT_INDENT$mgr: $pkg ($ver)"
+  print "$WAT_INDENT$mgr: $pkg${ver:+ ($ver)}"
 fi
