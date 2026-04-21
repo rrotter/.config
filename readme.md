@@ -6,6 +6,9 @@ WIP
 curl -OL https://raw.githubusercontent.com/rrotter/.config/refs/heads/macos/macos/10_language_and_display.zsh
 chmod +x 10_language_and_display.zsh
 ./10_language_and_display.zsh
+sudo xcode-select --install
+bash -c $(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)
+git clone https://github.com/rrotter/.config
 ```
 
 ---
