@@ -27,7 +27,7 @@ defaults write -g NSAutomaticSpellingCorrectionEnabled -bool false
 # menubar clock
 defaults write com.apple.menuextra.clock IsAnalog -bool false
 defaults write com.apple.menuextra.clock ShowAMPM -bool false
-defaults write com.apple.menuextra.clock ShowDate -bool false
+defaults write com.apple.menuextra.clock ShowDate 2
 defaults write com.apple.menuextra.clock ShowDayOfWeek -bool false
 defaults write com.apple.menuextra.clock ShowSeconds -bool true
 
@@ -70,3 +70,6 @@ defaults write com.apple.Safari WebKitPreferences.privateClickMeasurementEnabled
 # other Safari settings
 defaults write com.apple.Safari AutoOpenSafeDownloads -bool false
 defaults write com.apple.Safari ShowFullURLInSmartSearchField -bool true
+
+### Terminal ###
+defaults write com.apple.Terminal Command1Through9SwitchesTabs -bool false
