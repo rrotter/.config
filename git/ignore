@@ -1,2 +1,6 @@
-# global gitignore
+# files we NEVER want to commit
 .DS_Store
+
+# negative matches force rg, fd, etc to
+# search hidden files they normally ignore
+!/.github/
