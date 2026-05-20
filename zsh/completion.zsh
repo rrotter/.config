@@ -47,6 +47,7 @@ complete -C ${commands[aws_completer]:-/usr/libexec/aws_completer} aws
 complete -C tk tk
 complete -C tofu tofu
 complete -C terraform terraform
+complete -C 'terramate -' terramate
 
 ## replace bad completions where better option available ##
 _comps[xh]=${_comps[http]-$_comps[xh]}
