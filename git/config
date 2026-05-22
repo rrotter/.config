@@ -22,7 +22,6 @@
 	root = rev-parse --show-toplevel
 	sho = show --name-status
 	st = status
-	web = web
 	wt = worktree
 [color "branch"]
 	remote = magenta
