@@ -38,9 +38,9 @@ _expand_trailing_alias () {
   [[ $toks[-2] = [\|] ]] && return 1 # don't expand after pipe
   [[ -n $tmp ]] && _wanted aliases expl alias compadd -UQ -- ${tmp%%[[:blank:]]##} || return 1
 }
+# don't autocomplete subcommands for setting up autocomplete 🤦
+zstyle ':completion::complete:*:*:*' ignored-patterns 'completion'
 
-## configure completions for specific commands ##
-compdef _kubectl kubecolor
 # import bash completions
 autoload -Uz bashcompinit && bashcompinit && unfunction bashcompinit
 complete -C ${commands[aws_completer]:-/usr/libexec/aws_completer} aws
@@ -49,13 +49,12 @@ complete -C tofu tofu
 complete -C terraform terraform
 complete -C 'terramate -' terramate
 
-## replace bad completions where better option available ##
+## choose completers for specific commands ##
+_comps[kubecolor]=_kubectl
 _comps[xh]=${_comps[http]-$_comps[xh]}
 _comps[xhs]=$_comps[xh]
-
-## suppress bad completions ##
-compdef -d diff glow # unhelpful completions
-[[ -v commands[mdir] ]] || _mtools () { _default } # don't print errors when I fat-finger `mkdir` as `mdir`
+noglob unset _comps[diff] _comps[glow]
+[[ -v commands[mdir] ]] || _mtools () { _default }
 
 () {
   # commands and parameters that we never want suggested
@@ -101,6 +100,3 @@ compdef -d diff glow # unhelpful completions
 
   zstyle ':completion::complete:-command-:*:*' ignored-patterns $IGNORE
 }
-
-# don't autocomplete subcommands for setting up autocomplete 🤦
-zstyle ':completion::complete:*:*:*' ignored-patterns 'completion'
