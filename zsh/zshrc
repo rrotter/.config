@@ -95,6 +95,7 @@ alias help=run-help which-command='type -a'
 # shortening
 alias p='print -l --' path='print -l $path' fpath='print -l $fpath' -='cd -'
 [[ -v commands[k9s] ]] && alias 9=k9s
+[[ -v commands[terramate] ]] && alias tm=terramate
 alias g=git gg='git grep' remote='git remote --verbose'
 # alias git commands with barewords
 () {
