@@ -29,14 +29,6 @@ _expand_trailing_alias () {
 # don't autocomplete subcommands for setting up autocomplete 🤦
 zstyle ':completion::complete:*:*:*' ignored-patterns 'completion'
 
-# import bash completions
-autoload -Uz bashcompinit && bashcompinit && unfunction bashcompinit
-complete -C ${commands[aws_completer]:-/usr/libexec/aws_completer} aws
-complete -C tk tk
-complete -C tofu tofu
-complete -C terraform terraform
-complete -C 'terramate -' terramate
-
 ## choose completers for specific commands ##
 _comps[kubecolor]=_kubectl
 _comps[xh]=${_comps[http]-$_comps[xh]}

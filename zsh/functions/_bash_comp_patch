@@ -1,0 +1,43 @@
+#compdef aws terraform terramate tk tofu
+
+# Add command up top, and you've effectively done `complete -C cmdname cmdname`.
+#
+# Saves us running bashcompinit boilerplate at shell startup,
+# and we can patch broken or annoying bash completers here.
+
+_bash_comp_proxy () {
+  # completer is usually the binary itself
+  local completer=$service
+  # if aws_completer is missing from $PATH, assume it's where Debian puts it
+  [[ $service = aws ]] && completer=${commands[aws_completer]:-/usr/libexec/aws_completer}
+
+  # Hew slightly closer to bash completion spec than bashcompinit alone by
+  # sending service name to completer. This is almost always ignored, but fixes
+  # a major bug in the terramate completer.
+  # https://www.gnu.org/software/bash/manual/bash.html#index-complete
+  local matches=($($completer $service))
+
+  emulate -L zsh
+  # filter out useless completions
+  case $service in
+  terraform|tofu)
+    print -l -- ${matches:#-(|un)install-autocomplete}
+    ;;
+  terramate)
+    print -l -- ${matches:#install-completions}
+    ;;
+  tk)
+    print -l -- ${matches:#complete}
+    ;;
+  *)
+    print -l -- ${matches}
+  esac
+}
+
+_bash_comp_patch () {
+  _bash_complete -C _bash_comp_proxy
+}
+
+autoload -Uz bashcompinit && bashcompinit && unfunction bashcompinit complete
+
+_bash_comp_patch
