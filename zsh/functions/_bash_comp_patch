@@ -38,6 +38,8 @@ _bash_comp_patch () {
   _bash_complete -C _bash_comp_proxy
 }
 
-autoload -Uz bashcompinit && bashcompinit && unfunction bashcompinit complete
+if [[ ! -v functions[_bash_complete] ]]; then
+  autoload -Uz bashcompinit && bashcompinit && unfunction bashcompinit complete
+fi
 
 _bash_comp_patch
