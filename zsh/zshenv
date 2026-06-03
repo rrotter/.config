@@ -28,8 +28,6 @@ linux*)
   # the top, but makes sorting case sensitive. Proper fix would require a fully custom locale.
   # also see: https://www.unicode.org/Public/UCA/latest/allkeys.txt
   export LC_COLLATE=C.UTF-8
-  # fix debian renaming of fd
-  [[ :$PATH: != *:/usr/lib/cargo/bin:* && -d /usr/lib/cargo/bin ]] && PATH=$PATH:/usr/lib/cargo/bin
 ;;
 esac
 
