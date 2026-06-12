@@ -48,7 +48,6 @@ defaults write com.apple.finder ShowExternalHardDrivesOnDesktop -bool true
 
 # New Finder windows show home dir
 defaults write com.apple.finder NewWindowTarget PfHm
-defaults write com.apple.finder NewWindowTargetPath "file://${HOME}/"
 
 # Finder search scope: Current Folder
 defaults write com.apple.finder FXDefaultSearchScope SCcf
@@ -59,7 +58,7 @@ open -a Finder
 defaults write com.apple.iCal "TimeZone support enabled" -bool true
 
 ### Safari ###
-# safari develop menu 
+# safari develop menu
 defaults write com.apple.Safari.SandboxBroker ShowDevelopMenu -bool true
 defaults write com.apple.Safari IncludeDevelopMenu -bool true
 defaults write com.apple.Safari WebKitDeveloperExtrasEnabledPreferenceKey -bool true
