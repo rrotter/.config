@@ -6,10 +6,12 @@
 # and we can patch broken or annoying bash completers here.
 
 _bash_comp_proxy () {
-  # completer is usually the binary itself
-  local completer=$service
+  case $service in
   # if aws_completer is missing from $PATH, assume it's where Debian puts it
-  [[ $service = aws ]] && completer=${commands[aws_completer]:-/usr/libexec/aws_completer}
+  aws) local completer=${commands[aws_completer]:-/usr/libexec/aws_completer} ;;
+  # by default, assume completer is the binary itself
+  *) local completer=$service ;;
+  esac
 
   # Hew slightly closer to bash completion spec than bashcompinit alone by
   # sending service name to completer. This is almost always ignored, but fixes
